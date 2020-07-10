@@ -1,0 +1,31 @@
+﻿# Created by .ignore support plugin (hsz.mobi)
+### VisualStudioCode template
+.vscode/*
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+*.code-workspace
+.vs*
+
+# Local History for Visual Studio Code
+.history/
+
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+bin/*
+logs
+obj
+Folder.DotSettings.user
+Lavalink.jar
+MatsueNet.sln.DotSettings
+MatsueNet.sln.DotSettings.user
+packages-microsoft-prod.deb
+application.yml
+config.json
