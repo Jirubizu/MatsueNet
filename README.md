@@ -51,6 +51,9 @@ The database is based on MongoDB. There are currently two documents (tables) one
   - [ ] Recieve money
 - [ ] More features to think of... 
 
-
+## Prerequisites
+ - Discord.Net
+ - [Lavalink](https://github.com/Frederikam/Lavalink)
+ - Victoria (Provided)
 
 
