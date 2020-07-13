@@ -1,4 +1,7 @@
 ﻿# MatsueNet C# Discord Bot
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b7cd4ea417c4db2ba8106775845171c)](https://app.codacy.com/manual/Jirubizu/MatsueNet?utm_source=github.com&utm_medium=referral&utm_content=Jirubizu/MatsueNet&utm_campaign=Badge_Grade_Dashboard)
+
 ## Why I created Matsue
 Originally, I was learning nodejs and made a discord bot in js. However, I left that project unfinished for a long time and recently I wanted to learn C# because its the language I will be writing my final year project in. So by writing a bot in C# it allowed me to continue the development of my dormant bot and, learn a new language.
 
