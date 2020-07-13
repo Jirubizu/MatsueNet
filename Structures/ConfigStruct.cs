@@ -10,9 +10,12 @@ namespace MatsueNet.Structures
         [JsonProperty("osu_token")]
         public string OsuToken { get; set; }
 
-        [JsonProperty("mongo_db")]
-
+        [JsonProperty("mongo_db_uri")]
         // ReSharper disable once InconsistentNaming
-        public string MongoDB { get; set; }
+        public string MongoDBUri { get; set; }
+
+        [JsonProperty("mongo_db_name")]
+        // ReSharper disable once InconsistentNaming
+        public string MongoDBName { get; set; }
     }
 }

@@ -14,8 +14,8 @@ namespace MatsueNet.Services
 
         public DatabaseService(DiscordShardedClient shardedClient, ConfigService configService)
         {
-            var client = new MongoClient(configService.Config.MongoDB);
-            _mongoDatabase = client.GetDatabase("matsue");
+            var client = new MongoClient(configService.Config.MongoDBUri);
+            _mongoDatabase = client.GetDatabase(configService.Config.MongoDBName);
 
             shardedClient.JoinedGuild += OnJoinedGuild;
             shardedClient.MessageReceived += OnMessageReceived;
