@@ -8,6 +8,7 @@ using MatsueNet.Utils;
 
 namespace MatsueNet.Modules
 {
+    [Summary("Ultimate weeb commands")]
     public class Anime : MatsueModule
     {
         private readonly AnilistClient _aniClient;

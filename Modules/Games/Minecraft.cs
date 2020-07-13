@@ -6,6 +6,7 @@ using MatsueNet.Services;
 
 namespace MatsueNet.Modules.Games
 {
+    [Summary("Minecraft related commands")]
     public class Minecraft : MatsueModule
     {
         private readonly MinecraftService _minecraftService;
