@@ -6,6 +6,7 @@ using OsuSharp;
 
 namespace MatsueNet.Modules.Games
 {
+    [Summary("Osu stats commands")]
     public class Osu : MatsueModule
     {
         private readonly OsuService _osuService;

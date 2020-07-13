@@ -13,6 +13,7 @@ using Victoria.Enums;
 
 namespace MatsueNet.Modules
 {
+    [Summary("Music commands")]
     public class Music : MatsueModule
     {
         private static readonly IEnumerable<int> Range = Enumerable.Range(1900, 2000);

@@ -12,6 +12,7 @@ using Color = Discord.Color;
 
 namespace MatsueNet.Modules
 {
+    [Summary("Fun and miscellaneous commands")]
     public class Fun : MatsueModule
     {
         private readonly HttpService _http;

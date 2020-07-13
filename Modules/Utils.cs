@@ -11,6 +11,7 @@ using MatsueNet.Services;
 
 namespace MatsueNet.Modules
 {
+    [Summary("Utility commands")]
     public class Utils : MatsueModule
     {
         private readonly CommandService _commandService;
@@ -56,79 +57,77 @@ namespace MatsueNet.Modules
         {
             var guildChannel = (SocketGuildChannel)Context.Message.Channel;
 
-            var r = await _databaseService.LoadRecordsByGuildId(guildChannel.Guild.Id);
+            var results = await _databaseService.LoadRecordsByGuildId(guildChannel.Guild.Id);
 
-            var builder = new EmbedBuilder()
+            var embed = new EmbedBuilder()
             {
                 Color = Color.Teal,
-                Description = "These are the commands you can use"
+                Description = $"To find out what commands a category is please do the following command {results.Prefix}help <Category>"
             };
 
             foreach (var module in _commandService.Modules)
             {
-                string description = null;
-                foreach (var cmd in module.Commands)
-                {
-                    var result = await cmd.CheckPreconditionsAsync(Context);
-                    if (!result.IsSuccess) continue;
+                if (module.Name.Contains("MatsueModule")) continue;
 
-                    if (cmd.Parameters.Count != 0)
-                    {
-                        description += $"{r.Prefix}{cmd.Aliases.First()}";
-                        description = cmd.Parameters.Aggregate(description, (current, para) => current + $" <{para}>");
-                        description += "\n";
-                    }
-                    else
-                    {
-                        description += $"{r.Prefix}{cmd.Aliases.First()}\n";
-                    }
+                embed.AddField(module.Name, module.Summary, true);
+            }
+
+            await SendEmbedAsync(embed.Build());
+        }
+
+        [Command("help"), Summary("Get information about a specified command / category")]
+        public async Task Help(string command)
+        {
+            var guildChannel = (SocketGuildChannel)Context.Message.Channel;
+
+            var results = await _databaseService.LoadRecordsByGuildId(guildChannel.Guild.Id);
+
+            if (_commandService.Modules.FirstOrDefault(m => m.Name.ToLower().Contains(command.ToLower())) is { } module)
+            {
+                var embed = new EmbedBuilder()
+                {
+                    Color = Color.Teal,
+                    Description = $"Commands for {module.Name} category"
+                };
+
+                foreach (var commandInfo in module.Commands)
+                {
+                    embed.AddField($"{results.Prefix}{commandInfo.Name}", commandInfo.Summary);
                 }
 
-                if (!string.IsNullOrWhiteSpace(description))
+                await SendEmbedAsync(embed.Build());
+            }
+            else
+            {
+                var result = _commandService.Search(Context, command);
+
+                if (!result.IsSuccess)
                 {
+                    await SendErrorAsync($"Sorry, I couldn't find a command like **{command}**.");
+                    return;
+                }
+
+                var builder = new EmbedBuilder()
+                {
+                    Color = Color.Teal,
+                    Description = $"Here are some commands like **{command}**"
+                };
+
+                foreach (var match in result.Commands)
+                {
+                    var cmd = match.Command;
+
                     builder.AddField(x =>
                     {
-                        x.Name = module.Name;
-                        x.Value = description;
+                        x.Name = string.Join(", ", cmd.Aliases);
+                        x.Value = $"Parameters: {string.Join(", ", cmd.Parameters.Select(p => p.Name))}\n" +
+                                  $"Summary: {cmd.Summary}";
                         x.IsInline = false;
                     });
                 }
+
+                await SendEmbedAsync(builder.Build());
             }
-
-            await ReplyAsync("", false, builder.Build());
-        }
-
-        [Command("help"), Summary("Get information about a specified command")]
-        public async Task Help(string command)
-        {
-            var result = _commandService.Search(Context, command);
-
-            if (!result.IsSuccess)
-            {
-                await ReplyAsync($"Sorry, I couldn't find a command like **{command}**.");
-                return;
-            }
-
-            var builder = new EmbedBuilder()
-            {
-                Color = Color.Teal,
-                Description = $"Here are some commands like **{command}**"
-            };
-
-            foreach (var match in result.Commands)
-            {
-                var cmd = match.Command;
-
-                builder.AddField(x =>
-                {
-                    x.Name = string.Join(", ", cmd.Aliases);
-                    x.Value = $"Parameters: {string.Join(", ", cmd.Parameters.Select(p => p.Name))}\n" +
-                              $"Summary: {cmd.Summary}";
-                    x.IsInline = false;
-                });
-            }
-
-            await ReplyAsync("", false, builder.Build());
         }
 
         [Command("Info"), Summary("Display information regarding the bot")]
