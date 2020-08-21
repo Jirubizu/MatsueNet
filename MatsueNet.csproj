@@ -16,7 +16,7 @@
     <PackageReference Include="Miki.Anilist" Version="0.6.3" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Victoria, Version=5.1.6.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Victoria, Version=5.1.8.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>.\dlls\Victoria.dll</HintPath>
     </Reference>
   </ItemGroup>
