@@ -116,8 +116,9 @@ namespace MatsueNet.Modules
             {
                 if (!string.IsNullOrWhiteSpace(searchResponse.Playlist.Name))
                 {
-                    foreach (var track in searchResponse.Tracks)
+                    foreach (var lavaTrack in searchResponse.Tracks)
                     {
+                        var track = lavaTrack;
                         track.Queued = Context.User as IGuildUser;
                         player.Queue.Enqueue(track);
                     }
@@ -128,8 +129,8 @@ namespace MatsueNet.Modules
                 {
                     var track = searchResponse.Tracks[0];
                     track.Queued = Context.User as IGuildUser;
-                    var artwork = await track.FetchArtworkAsync();
                     player.Queue.Enqueue(track);
+                    var artwork = await track.FetchArtworkAsync();
                     var embed = new EmbedBuilder()
                         .WithAuthor("Added to queue", Context.User.GetAvatarUrl())
                         .WithTitle(track.Title)
@@ -518,14 +519,15 @@ namespace MatsueNet.Modules
             var embed = new EmbedBuilder
             {
                 Title = "Music Queue",
-                Color = Color.Teal
+                Color = Color.Teal,
+                ThumbnailUrl = await player.Track.FetchArtworkAsync()
             };
-            embed.AddField("Now Playing", player.Track.Title);
+            embed.AddField("Now Playing", $"{player.Track.Title} || {player.Track.Queued.Mention}");
 
             var queue = "";
             for (var index = 0; index < player.Queue.Count; index++)
             {
-                queue += $"{index + 1}: {((LavaTrack)player.Queue.ElementAt(index)).Title}\n";
+                queue += $"{index + 1}: {((LavaTrack)player.Queue.ElementAt(index)).Title} || {((LavaTrack)player.Queue.ElementAt(index)).Queued.Username}\n";
             }
 
             embed.AddField("Up Next", queue);
