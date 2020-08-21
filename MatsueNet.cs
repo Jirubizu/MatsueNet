@@ -18,6 +18,7 @@ namespace MatsueNet
         private readonly CommandService _commandService;
         private ConfigService _config;
         private IServiceProvider _services;
+        private LavaConfig _lavaConfig;
 
         public MatsueNet(DiscordShardedClient client = null, CommandService commandService = null)
         {
@@ -40,9 +41,11 @@ namespace MatsueNet
         {
             _config = new ConfigService("./config.json");
             await _client.LoginAsync(TokenType.Bot, _config.Config.BotToken);
-            // await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("DiscordMatsueToken"));
             await _client.StartAsync();
+            
             _client.Log += LogAsync;
+            _lavaConfig = new LavaConfig();
+            // _lavaConfig = new LavaConfig{Authorization = _config.Config.LavaLinkPassword, Hostname = _config.Config.LavaLinkHostname, Port = _config.Config.LavaLinkPort};
 
             _services = SetupServices();
             var commandHandler = _services.GetRequiredService<CommandHandler>();
@@ -61,7 +64,7 @@ namespace MatsueNet
             .AddSingleton<RandomService>()
             .AddSingleton<MusicService>()
             .AddSingleton<LavaNode>()
-            .AddSingleton<LavaConfig>()
+            .AddSingleton(_lavaConfig)
             .AddSingleton<AnilistClient>()
             .AddSingleton<MinecraftService>()
             .AddSingleton<DatabaseService>()

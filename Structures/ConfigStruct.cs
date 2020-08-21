@@ -17,5 +17,14 @@ namespace MatsueNet.Structures
         [JsonProperty("mongo_db_name")]
         // ReSharper disable once InconsistentNaming
         public string MongoDBName { get; set; }
+        
+        [JsonProperty("lavalink_hostname")]
+        public string LavaLinkHostname { get; set; }
+        
+        [JsonProperty("lavalink_port")]
+        public ushort LavaLinkPort { get; set; }
+        
+        [JsonProperty("lavalink_password")]
+        public string LavaLinkPassword { get; set; }
     }
 }
