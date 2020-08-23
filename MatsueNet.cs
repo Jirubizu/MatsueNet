@@ -70,6 +70,7 @@ namespace MatsueNet
             .AddSingleton<DatabaseService>()
             .AddSingleton<OsuService>()
             .AddSingleton<TronaldDumpService>()
+            .AddSingleton<BalanceService>()
             .AddSingleton(new InteractivityService(_client, TimeSpan.FromMinutes(3)))
             .BuildServiceProvider();
 
