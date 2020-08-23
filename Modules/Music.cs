@@ -410,10 +410,10 @@ namespace MatsueNet.Modules
             embed.WithTitle($"{track.Author} - {track.Title}");
             embed.WithThumbnailUrl(artwork);
             embed.WithUrl(track.Url);
-            embed.AddField("Id", track.Id);
-            embed.AddField("Duration", track.Duration);
+            embed.AddField("Id", track.Id, true);
+            embed.AddField("Duration", track.Duration, true);
             embed.AddField("Position", track.Position.StripMilliseconds());
-            embed.AddField("Remaining", (track.Duration - track.Position).StripMilliseconds());
+            embed.AddField("Remaining", (track.Duration - track.Position).StripMilliseconds(), true);
             embed.WithColor(Color.Teal);
             embed.WithFooter($"Requested By {track.Queued.Username}");
 
