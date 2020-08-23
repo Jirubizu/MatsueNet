@@ -1,15 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
-using Discord.WebSocket;
+﻿using System.Threading.Tasks;
 
 namespace MatsueNet.Services
 {
     public class BalanceService
     {
-        private DatabaseService _databaseService;
+        private readonly DatabaseService _databaseService;
         private readonly RandomService _randomService;
         
-        public BalanceService(DatabaseService databaseService, RandomService randomService, DiscordShardedClient client)
+        public BalanceService(DatabaseService databaseService, RandomService randomService)
         {
             _databaseService = databaseService;
             _randomService = randomService;
