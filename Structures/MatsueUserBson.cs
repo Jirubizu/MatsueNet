@@ -14,7 +14,7 @@ namespace MatsueNet.Structures
         public ulong UserId { get; set; }
 
         [BsonElement("balance")]
-        public ulong Balance { get; set; }
+        public float Balance { get; set; }
 
         [BsonElement("married")]
         public bool Married { get; set; }
