@@ -40,14 +40,14 @@ namespace MatsueNet
         public async Task SetupAsync()
         {
             _config = new ConfigService("./config.json");
+            
             await _client.LoginAsync(TokenType.Bot, _config.Config.BotToken);
             await _client.StartAsync();
             
+            _lavaConfig = new LavaConfig{Authorization = _config.Config.LavaLinkPassword, Hostname = _config.Config.LavaLinkHostname, Port = _config.Config.LavaLinkPort};
             _client.Log += LogAsync;
-            _lavaConfig = new LavaConfig();
-            // _lavaConfig = new LavaConfig{Authorization = _config.Config.LavaLinkPassword, Hostname = _config.Config.LavaLinkHostname, Port = _config.Config.LavaLinkPort};
-
             _services = SetupServices();
+            
             var commandHandler = _services.GetRequiredService<CommandHandler>();
             await commandHandler.SetupAsync();
 
