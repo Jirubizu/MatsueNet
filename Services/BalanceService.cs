@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Discord.WebSocket;
 
 namespace MatsueNet.Services
@@ -28,21 +29,32 @@ namespace MatsueNet.Services
             await _databaseService.UpdateUser(user);
         }
 
-        public async Task SubBalance(ulong userId, float amount)
+        public async Task<bool> SubBalance(ulong userId, float amount)
         {
             var user = await _databaseService.LoadRecordsByUserId(userId);
             user.Balance -= amount;
+            if (user.Balance < 0) return false;
             await _databaseService.UpdateUser(user);
+            return true;
+        }
+
+        public async Task<bool> Pay(ulong payTo, ulong paying, float amount)
+        {
+            var result = await SubBalance(paying, amount);
+            if (!result) return false;
+            
+            await AddBalance(payTo, amount);
+            return true;
         }
 
         public async Task MessageCoin(ulong userId)
         {
             if (_randomService.Chance())
             {
-                var amount = _randomService.NextFloat();
+                var amount = _randomService.Next(1,15);
                 var user = await _databaseService.LoadRecordsByUserId(userId);
-
-                user.Balance += amount;
+                
+                user.Balance += (float)amount / 100;
                 
                 await _databaseService.UpdateUser(user);
             }
