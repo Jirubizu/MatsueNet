@@ -21,9 +21,7 @@ The database is based on MongoDB. There are currently two documents (tables) one
     "married_to": {
         "$numberLong": "01010101010101010"
     },
-    "balance": {
-        "$numberLong": "0"
-    }
+    "balance": 1.04
 }
 ```
 #### Guilds document
@@ -37,8 +35,12 @@ The database is based on MongoDB. There are currently two documents (tables) one
     "music_channel": {
         "$numberLong": "01010101010101010"
     },
-    "bot_channel": null,
-    "admin_channel": null,
+    "bot_channel": {
+        "$numberLong": "01010101010101010"
+    },
+    "admin_channel": {
+        "$numberLong": "01010101010101010"
+    },
     "prefix": "!"
 ```
 
@@ -47,11 +49,11 @@ The database is based on MongoDB. There are currently two documents (tables) one
 - [ ] Implement marriage system
   - [ ] Allow people to see who someone is married
   - [ ] Only allow 1 across all of discord (global marraige)
-- [ ] Implement balances
-  - [ ] View balance
-  - [ ] Get money (dailys or something like that)
-  - [ ] Send money
-  - [ ] Recieve money
+- [x] Implement balances
+  - [x] View balance
+  - [x] Get money (dailys or something like that)
+  - [x] Send money
+  - [x] Recieve money
 - [ ] More features to think of... 
 
 ## Prerequisites
