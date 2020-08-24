@@ -46,7 +46,7 @@ namespace MatsueNet.Modules
         }
 
         [Command("Pay"), Summary("Pay someone a given amount")]
-        public async Task Pay(IGuildUser payTo, float amount)
+        public async Task Pay(IGuildUser payTo, double amount)
         {
             if (!(Context.User is IGuildUser user)) return;
             

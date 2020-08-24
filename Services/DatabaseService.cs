@@ -93,13 +93,18 @@ namespace MatsueNet.Services
             var result = await LoadRecordsByUserId(message.Author.Id);
             if (result == null)
             {
-                await InsertRecord("users", new MatsueUserBson { UserId = message.Author.Id, Balance = 0, Married = false, MarriedTo = null });
+                await InsertRecord("users",
+                    new MatsueUserBson {UserId = message.Author.Id, Balance = 0, Married = false, MarriedTo = null});
             }
         }
 
         private async Task OnJoinedGuild(SocketGuild arg)
         {
-            await InsertRecord("guilds", new MatsueGuildBson { GuildId = arg.Id, MusicChannelId = null, BotChannelId = null, AdminChannelId = null, Prefix = "!" });
+            await InsertRecord("guilds",
+                new MatsueGuildBson
+                {
+                    GuildId = arg.Id, MusicChannelId = null, BotChannelId = null, AdminChannelId = null, Prefix = "!"
+                });
         }
 
         private async Task OnLeftGuild(SocketGuild arg)
