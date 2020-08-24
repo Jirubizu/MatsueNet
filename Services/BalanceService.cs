@@ -48,7 +48,7 @@ namespace MatsueNet.Services
 
         public async Task MessageCoin(ulong userId)
         {
-            if (_randomService.Chance())
+            if (_randomService.Chance(50))
             {
                 var amount = _randomService.Next(1, 15);
                 var user = await _databaseService.LoadRecordsByUserId(userId);

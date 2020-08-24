@@ -44,13 +44,14 @@ namespace MatsueNet.Services
         {
             return array[this.Next(0, array.Count - 1)].Value<T>();
         }
-
-        public bool Chance(int likelihood = 50)
+        
+        
+        public bool Chance(int likelihood)
         {
             return this.Sample() * 100 < likelihood;
         }
 
-        public int Dice(int sides = 6)
+        public int Dice(int sides)
         {
             return this.Next(1, sides);
         }
