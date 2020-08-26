@@ -14,9 +14,9 @@ namespace MatsueNet
         }
 
         protected async Task<IUserMessage> SendFileAsync(Stream stream, string filename, string text = null,
-            bool isTTS = false, Embed embed = null, RequestOptions options = null, bool isSpoiler = false)
+            bool isTts = false, Embed embed = null, RequestOptions options = null, bool isSpoiler = false)
         {
-            return await Context.Channel.SendFileAsync(stream, filename, text, isTTS, embed, options, isSpoiler);
+            return await Context.Channel.SendFileAsync(stream, filename, text, isTts, embed, options, isSpoiler);
         }
 
         protected async Task<IUserMessage> SendEmbedAsync(Embed embed)
