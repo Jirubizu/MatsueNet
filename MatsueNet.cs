@@ -17,7 +17,6 @@ namespace MatsueNet
         private readonly DiscordShardedClient _client;
         private readonly CommandService _commandService;
         private ConfigService _config;
-        // private IServiceProvider _services;
         private LavaConfig _lavaConfig;
 
         public MatsueNet() : this(null, null)
