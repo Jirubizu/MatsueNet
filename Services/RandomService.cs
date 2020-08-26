@@ -18,9 +18,9 @@ namespace MatsueNet.Services
             return (int)(minValue + (maxValue - minValue) * (scale / (uint.MaxValue + 1.0)));
         }
 
-        public override int Next(int max)
+        public override int Next(int maxValue)
         {
-            return Next(0, max);
+            return Next(0, maxValue);
         }
 
         public float NextFloat()

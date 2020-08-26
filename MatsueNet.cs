@@ -24,7 +24,7 @@ namespace MatsueNet
         {
         }
 
-        public MatsueNet(DiscordShardedClient client = null, CommandService commandService = null)
+        public MatsueNet(DiscordShardedClient client, CommandService commandService)
         {
             _client = client ?? new DiscordShardedClient(new DiscordSocketConfig
             {

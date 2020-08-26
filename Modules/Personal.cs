@@ -25,11 +25,11 @@ namespace MatsueNet.Modules
 
             var embed = new EmbedBuilder
             {
-                Color = Color.Teal
+                Color = Color.Teal,
+                Author = new EmbedAuthorBuilder
+                    {Name = $"{user.Username}'s Balance", IconUrl = $"{user.GetAvatarUrl()}"},
+                Title = $"${await _balanceService.GetBalance(user.Id)}"
             };
-
-            embed.WithAuthor($"{user.Username}'s Balance", $"{user.GetAvatarUrl()}");
-            embed.WithTitle($"${await _balanceService.GetBalance(user.Id)}");
 
             await SendEmbedAsync(embed.Build());
         }
@@ -39,11 +39,11 @@ namespace MatsueNet.Modules
         {
             var embed = new EmbedBuilder
             {
-                Color = Color.Teal
+                Color = Color.Teal,
+                Author = new EmbedAuthorBuilder
+                    {Name = $"{user.Username}'s Balance", IconUrl = $"{user.GetAvatarUrl()}"},
+                Title = $"${await _balanceService.GetBalance(user.Id)}"
             };
-
-            embed.WithAuthor($"{user.Username}'s Balance", $"{user.GetAvatarUrl()}");
-            embed.WithTitle($"${await _balanceService.GetBalance(user.Id)}");
 
             await SendEmbedAsync(embed.Build());
         }
@@ -51,19 +51,21 @@ namespace MatsueNet.Modules
         [Command("Pay"), Summary("Pay someone a given amount")]
         public async Task Pay(IGuildUser payTo, double amount)
         {
-            if (!(Context.User is IGuildUser user)) return;
+            if (!(Context.User is IGuildUser user))
+            {
+                return;
+            }
 
             var result = await _balanceService.Pay(payTo.Id, user.Id, amount);
 
             var embed = new EmbedBuilder
             {
                 Color = Color.Teal,
-                Author = new EmbedAuthorBuilder {Name = "Matsue", IconUrl = Context.Client.CurrentUser.GetAvatarUrl()}
+                Author = new EmbedAuthorBuilder {Name = "Matsue", IconUrl = Context.Client.CurrentUser.GetAvatarUrl()},
+                Description = !result
+                    ? "Unable to process payment as you do not have enough money."
+                    : $"Payment went through. {payTo.Username} has now received ${amount}"
             };
-
-            embed.WithDescription(!result
-                ? "Unable to process payment as you do not have enough money."
-                : $"Payment went through. {payTo.Username} has now received ${amount}");
 
             await SendEmbedAsync(embed.Build());
         }

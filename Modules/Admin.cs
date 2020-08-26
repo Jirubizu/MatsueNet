@@ -29,22 +29,29 @@ namespace MatsueNet.Modules
 
         [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
         [Command("Ban"), Summary("Ban a selected user given their mention")]
+        public async Task Ban(SocketUser user)
+        {
+            await Ban(user.Id, "");
+        }
+
+        [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
+        [Command("Ban"), Summary("Ban a selected user given their mention")]
+        public async Task Ban(ulong user)
+        {
+            await Ban(user, "");
+        }
+
+
+        [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
+        [Command("Ban"), Summary("Ban a selected user given their mention")]
         public async Task Ban(SocketUser user, [Remainder] string reason)
         {
-            try
-            {
-                await Context.Guild.AddBanAsync(user.Id, 0, reason ?? "");
-                await SendSuccessAsync($"Banned {user.Username} for {reason ?? ""}");
-            }
-            catch (Exception)
-            {
-                await SendErrorAsync("User either not found or is already banned");
-            }
+            await Ban(user.Id, reason);
         }
 
         [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
         [Command("Ban"), Summary("Ban a selected user given their user id")]
-        public async Task Ban(ulong id, [Remainder] string reason = "")
+        public async Task Ban(ulong id, [Remainder] string reason)
         {
             try
             {
