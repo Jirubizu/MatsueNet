@@ -14,23 +14,26 @@ namespace MatsueNet.Modules
         {
             _balanceService = balanceService;
         }
-        
+
         [Command("Balance"), Summary("Get your total balance")]
         public async Task Balance()
         {
-            if (!(Context.User is IGuildUser user)) return;
-            
+            if (!(Context.User is IGuildUser user))
+            {
+                return;
+            }
+
             var embed = new EmbedBuilder
             {
                 Color = Color.Teal
             };
-            
+
             embed.WithAuthor($"{user.Username}'s Balance", $"{user.GetAvatarUrl()}");
             embed.WithTitle($"${await _balanceService.GetBalance(user.Id)}");
 
             await SendEmbedAsync(embed.Build());
         }
-        
+
         [Command("Balance"), Summary("Get someone else's balance")]
         public async Task Balance(IGuildUser user)
         {
@@ -38,7 +41,7 @@ namespace MatsueNet.Modules
             {
                 Color = Color.Teal
             };
-            
+
             embed.WithAuthor($"{user.Username}'s Balance", $"{user.GetAvatarUrl()}");
             embed.WithTitle($"${await _balanceService.GetBalance(user.Id)}");
 
@@ -49,13 +52,13 @@ namespace MatsueNet.Modules
         public async Task Pay(IGuildUser payTo, double amount)
         {
             if (!(Context.User is IGuildUser user)) return;
-            
+
             var result = await _balanceService.Pay(payTo.Id, user.Id, amount);
 
             var embed = new EmbedBuilder
             {
                 Color = Color.Teal,
-                Author = new EmbedAuthorBuilder{Name = "Matsue", IconUrl = Context.Client.CurrentUser.GetAvatarUrl()}
+                Author = new EmbedAuthorBuilder {Name = "Matsue", IconUrl = Context.Client.CurrentUser.GetAvatarUrl()}
             };
 
             embed.WithDescription(!result

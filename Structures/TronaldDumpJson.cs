@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace MatsueNet.Structures
 {
-    public struct DonaldTagGetJson
+    public struct DonaldTagGetJson : IEquatable<DonaldTagGetJson>
     {
         [JsonProperty("count")]
         public int Count { get; set; }
@@ -12,24 +13,39 @@ namespace MatsueNet.Structures
 
         [JsonProperty("_embedded")]
         public DonaldEmbedTag Embed { get; set; }
+
+        public bool Equals(DonaldTagGetJson other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public struct DonaldEmbedTag
+    public struct DonaldEmbedTag : IEquatable<DonaldEmbedTag>
     {
         [JsonProperty("tag")]
         public DonaldTagJson[] Tags { get; set; }
+
+        public bool Equals(DonaldEmbedTag other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public struct DonaldEmbedRandomTag
+    public struct DonaldEmbedRandomTag : IEquatable<DonaldEmbedRandomTag>
     {
         [JsonProperty("author")]
         public AuthorJson[] Author { get; set; }
 
         [JsonProperty("source")]
         public SourceJson[] Source { get; set; }
+
+        public bool Equals(DonaldEmbedRandomTag other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public struct DonaldTagJson
+    public struct DonaldTagJson : IEquatable<DonaldTagJson>
     {
         [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
@@ -42,6 +58,11 @@ namespace MatsueNet.Structures
 
         [JsonProperty("_links")]
         public LinkJson Link { get; set; }
+
+        public bool Equals(DonaldTagJson other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public struct LinkJson
@@ -50,13 +71,18 @@ namespace MatsueNet.Structures
         public UriJson Uri { get; set; }
     }
 
-    public struct UriJson
+    public struct UriJson : IEquatable<UriJson>
     {
         [JsonProperty("href")]
         public string Href { get; set; }
+
+        public bool Equals(UriJson other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public struct RandomQuoteJson
+    public struct RandomQuoteJson : IEquatable<RandomQuoteJson>
     {
         [JsonProperty("appeared_at")]
         public string AppearedAt { get; set; }
@@ -81,9 +107,14 @@ namespace MatsueNet.Structures
 
         [JsonProperty("_links")]
         public LinkJson Links { get; set; }
+
+        public bool Equals(RandomQuoteJson other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public struct AuthorJson
+    public struct AuthorJson : IEquatable<AuthorJson>
     {
         [JsonProperty("author_id")]
         public string AuthorId { get; set; }
@@ -105,9 +136,14 @@ namespace MatsueNet.Structures
 
         [JsonProperty("_links")]
         public LinkJson Link { get; set; }
+
+        public bool Equals(AuthorJson other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public struct SourceJson
+    public struct SourceJson : IEquatable<SourceJson>
     {
         [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
@@ -129,5 +165,10 @@ namespace MatsueNet.Structures
 
         [JsonProperty("_links")]
         public LinkJson Link { get; set; }
+
+        public bool Equals(SourceJson other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

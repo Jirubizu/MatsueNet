@@ -29,12 +29,12 @@ namespace MatsueNet.Modules
 
         [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
         [Command("Ban"), Summary("Ban a selected user given their mention")]
-        public async Task Ban(SocketUser user, [Remainder] string reason = "")
+        public async Task Ban(SocketUser user, [Remainder] string reason)
         {
             try
             {
-                await Context.Guild.AddBanAsync(user.Id, 0, reason);
-                await SendSuccessAsync($"Banned {user.Username} for {reason}");
+                await Context.Guild.AddBanAsync(user.Id, 0, reason ?? "");
+                await SendSuccessAsync($"Banned {user.Username} for {reason ?? ""}");
             }
             catch (Exception)
             {
@@ -76,11 +76,21 @@ namespace MatsueNet.Modules
 
         [RequireUserPermission(GuildPermission.ManageMessages), RequireBotPermission(GuildPermission.ManageMessages)]
         [Command("Purge"), Summary("Remove the provided amount of messages from the channel")]
-        public async Task Purge([Range(1, 100)] int amount = 25)
+        public Task Purge()
+        {
+            return Purge(25);
+        }
+
+        [RequireUserPermission(GuildPermission.ManageMessages), RequireBotPermission(GuildPermission.ManageMessages)]
+        [Command("Purge"), Summary("Remove the provided amount of messages from the channel")]
+        public async Task Purge([Range(1, 100)] int amount)
         {
             if (Context.Channel is ITextChannel channel)
             {
-                if (!(Context.Message.Channel is SocketGuildChannel)) return;
+                if (!(Context.Message.Channel is SocketGuildChannel))
+                {
+                    return;
+                }
 
                 var messages = await channel.GetMessagesAsync(amount).FlattenAsync();
                 await channel.DeleteMessagesAsync(messages);
@@ -89,11 +99,21 @@ namespace MatsueNet.Modules
 
         [RequireUserPermission(GuildPermission.ManageMessages), RequireBotPermission(GuildPermission.ManageMessages)]
         [Command("cleanup"), Summary("Cleanup bot input and output from channel.")]
-        public async Task Cleanup([Range(1, 100)] int amount = 25)
+        public async Task Cleanup()
+        {
+            await Cleanup(25);
+        }
+
+        [RequireUserPermission(GuildPermission.ManageMessages), RequireBotPermission(GuildPermission.ManageMessages)]
+        [Command("cleanup"), Summary("Cleanup bot input and output from channel.")]
+        public async Task Cleanup([Range(1, 100)] int amount)
         {
             if (Context.Channel is ITextChannel channel)
             {
-                if (!(Context.Message.Channel is SocketGuildChannel guildChannel)) return;
+                if (!(Context.Message.Channel is SocketGuildChannel guildChannel))
+                {
+                    return;
+                }
 
                 var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
 
@@ -108,7 +128,10 @@ namespace MatsueNet.Modules
         [Command("SetPrefix"), Summary("Set the prefix of the bot")]
         public async Task SetPrefix(string prefix)
         {
-            if (!(Context.Message.Channel is SocketGuildChannel guildChannel)) return;
+            if (!(Context.Message.Channel is SocketGuildChannel guildChannel))
+            {
+                return;
+            }
 
             var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
             current.Prefix = prefix;
@@ -121,7 +144,10 @@ namespace MatsueNet.Modules
         [Command("SetMusicChannel"), Summary("Set the channel where the bot should only listen to bot commands in")]
         public async Task SetMusicChannel(SocketTextChannel channel)
         {
-            if (!(Context.Message.Channel is SocketGuildChannel guildChannel)) return;
+            if (!(Context.Message.Channel is SocketGuildChannel guildChannel))
+            {
+                return;
+            }
 
             var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
             current.MusicChannelId = channel.Id;
@@ -134,7 +160,10 @@ namespace MatsueNet.Modules
         [Command("SetAdminChannel"), Summary("Set the channel in which only admin commands should work")]
         public async Task SetAdminChannel(SocketTextChannel channel)
         {
-            if (!(Context.Message.Channel is SocketGuildChannel guildChannel)) return;
+            if (!(Context.Message.Channel is SocketGuildChannel guildChannel))
+            {
+                return;
+            }
 
             var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
             current.AdminChannelId = channel.Id;
@@ -147,7 +176,10 @@ namespace MatsueNet.Modules
         [Command("SetBotChannel"), Summary("Set the channel in which the bot should only listen to")]
         public async Task SetBotChannel(SocketTextChannel channel)
         {
-            if (!(Context.Message.Channel is SocketGuildChannel guildChannel)) return;
+            if (!(Context.Message.Channel is SocketGuildChannel guildChannel))
+            {
+                return;
+            }
 
             var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
             current.BotChannelId = channel.Id;

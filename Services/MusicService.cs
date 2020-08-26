@@ -33,19 +33,16 @@ namespace MatsueNet.Services
 
         private Task OnLog(LogMessage arg)
         {
-            // logger.Log(arg.Severity.Convert(), arg.Exception, arg.Message);
             return Task.CompletedTask;
         }
 
         private Task OnPlayerUpdated(PlayerUpdateEventArgs arg)
         {
-            // logger.LogInformation($"Player update received for {arg.Player.VoiceChannel.Name}.");
             return Task.CompletedTask;
         }
 
         private Task OnStatsReceived(StatsEventArgs arg)
         {
-            // logger.LogInformation($"Lavalink Uptime {arg.Uptime}.");
             return Task.CompletedTask;
         }
 
@@ -77,19 +74,16 @@ namespace MatsueNet.Services
 
         private Task OnTrackException(TrackExceptionEventArgs arg)
         {
-            // logger.LogCritical($"Track exception received for {arg.Track.Title}.");
             return Task.CompletedTask;
         }
 
         private Task OnTrackStuck(TrackStuckEventArgs arg)
         {
-            // logger.LogError($"Track stuck received for {arg.Track.Title}.");
             return Task.CompletedTask;
         }
 
         private Task OnWebSocketClosed(WebSocketClosedEventArgs arg)
         {
-            // logger.LogCritical($"Discord WebSocket connection closed with following reason: {arg.Reason}");
             return Task.CompletedTask;
         }
     }

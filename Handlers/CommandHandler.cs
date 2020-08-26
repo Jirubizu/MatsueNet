@@ -16,7 +16,8 @@ namespace MatsueNet.Handlers
         private readonly DatabaseService _databaseService;
         private readonly BalanceService _balanceService;
 
-        public CommandHandler(DiscordShardedClient c, CommandService cs, IServiceProvider s, DatabaseService dbs, BalanceService balanceService)
+        public CommandHandler(DiscordShardedClient c, CommandService cs, IServiceProvider s, DatabaseService dbs,
+            BalanceService balanceService)
         {
             _client = c;
             _commandService = cs;
@@ -35,14 +36,17 @@ namespace MatsueNet.Handlers
         private async Task HandleCommandAsync(SocketMessage msg)
         {
             int argPos = 0;
-            if (!(msg is SocketUserMessage message)) return;
+            if (!(msg is SocketUserMessage message))
+            {
+                return;
+            }
 
             await _balanceService.MessageCoin(message.Author.Id);
-            
-            var guildChannel = (SocketGuildChannel)message.Channel;
+
+            var guildChannel = (SocketGuildChannel) message.Channel;
 
             var r = await _databaseService.LoadRecordsByGuildId(guildChannel.Guild.Id);
-            
+
             if (message.HasStringPrefix(r.Prefix, ref argPos))
             {
                 var context = new ShardedCommandContext(_client, message);

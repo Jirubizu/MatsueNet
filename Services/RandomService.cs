@@ -9,13 +9,13 @@ namespace MatsueNet.Services
     {
         private readonly RandomNumberGenerator _rng = RandomNumberGenerator.Create();
 
-        public override int Next(int min, int max)
+        public override int Next(int minValue, int maxValue)
         {
             var bytes = new byte[4];
             _rng.GetBytes(bytes);
             var scale = BitConverter.ToUInt32(bytes, 0);
 
-            return (int)(min + (max - min) * (scale / (uint.MaxValue + 1.0)));
+            return (int)(minValue + (maxValue - minValue) * (scale / (uint.MaxValue + 1.0)));
         }
 
         public override int Next(int max)

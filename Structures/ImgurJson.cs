@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MatsueNet.Structures
 {
-    public struct ImgurAdConfig
+    public struct ImgurAdConfig : IEquatable<ImgurAdConfig>
     {
         [JsonProperty("safeFlags")]
         public string[] SafeFlags { get; set; }
@@ -13,9 +13,14 @@ namespace MatsueNet.Structures
 
         [JsonProperty("showsAds")]
         public bool ShowsAds { get; set; }
+
+        public bool Equals(ImgurAdConfig other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public struct ImgurPost
+    public struct ImgurPost : IEquatable<ImgurPost>
     {
         [JsonProperty("id")]
         public long Id { get; set; }
@@ -118,9 +123,14 @@ namespace MatsueNet.Structures
 
         [JsonProperty("adConfig")]
         public ImgurAdConfig AdConfig { get; set; }
+
+        public bool Equals(ImgurPost other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public struct ImgurJson
+    public struct ImgurJson : IEquatable<ImgurJson>
     {
         [JsonProperty("data")]
         public ImgurPost[] Data { get; set; }
@@ -130,5 +140,10 @@ namespace MatsueNet.Structures
 
         [JsonProperty("status")]
         public int Status { get; set; }
+
+        public bool Equals(ImgurJson other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

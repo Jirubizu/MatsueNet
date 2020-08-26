@@ -110,7 +110,12 @@ namespace MatsueNet.Services
             }
         }
 
-        public async Task<T> GetWithHostAsync<T>(string uri, string host, string accept = "*/*")
+        public Task<T> GetWithHostAsync<T>(string uri, string host)
+        {
+            return GetWithHostAsync<T>(uri, host, "*/*");
+        }
+
+        public async Task<T> GetWithHostAsync<T>(string uri, string host, string accept)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
@@ -123,7 +128,7 @@ namespace MatsueNet.Services
             {
                 try
                 {
-                    return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync());
+                    return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync().ConfigureAwait(false));
                 }
                 catch
                 {
@@ -132,7 +137,12 @@ namespace MatsueNet.Services
             }
         }
 
-        public async Task<T> PostAsyncYes<T>(string uri, string host, string accept = "*/*")
+        public Task<T> PostAsyncYes<T>(string uri, string host)
+        {
+            return PostAsyncYes<T>(uri, host, "*/*");
+        }
+
+        public async Task<T> PostAsyncYes<T>(string uri, string host, string accept)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;

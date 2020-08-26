@@ -17,8 +17,12 @@ namespace MatsueNet
         private readonly DiscordShardedClient _client;
         private readonly CommandService _commandService;
         private ConfigService _config;
-        private IServiceProvider _services;
+        // private IServiceProvider _services;
         private LavaConfig _lavaConfig;
+
+        public MatsueNet() : this(null, null)
+        {
+        }
 
         public MatsueNet(DiscordShardedClient client = null, CommandService commandService = null)
         {
@@ -46,12 +50,13 @@ namespace MatsueNet
             
             _lavaConfig = new LavaConfig{Authorization = _config.Config.LavaLinkPassword, Hostname = _config.Config.LavaLinkHostname, Port = _config.Config.LavaLinkPort};
             _client.Log += LogAsync;
-            _services = SetupServices();
+
+            var services = SetupServices();
             
-            var commandHandler = _services.GetRequiredService<CommandHandler>();
+            var commandHandler = services.GetRequiredService<CommandHandler>();
             await commandHandler.SetupAsync();
 
-            await Task.Delay(-1);
+            await Task.Delay(-1).ConfigureAwait(false);
         }
 
         private IServiceProvider SetupServices() => new ServiceCollection()

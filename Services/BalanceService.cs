@@ -32,17 +32,24 @@ namespace MatsueNet.Services
         {
             var user = await _databaseService.LoadRecordsByUserId(userId);
             user.Balance -= amount;
-            if (user.Balance < 0) return false;
+            if (user.Balance < 0)
+            {
+                return false;
+            }
+
             await _databaseService.UpdateUser(user);
             return true;
         }
 
         public async Task<bool> Pay(ulong payTo, ulong paying, double amount)
         {
-            var result = await SubBalance(paying, amount);
-            if (!result) return false;
+            var result = await SubBalance(paying, amount).ConfigureAwait(false);
+            if (!result)
+            {
+                return false;
+            }
 
-            await AddBalance(payTo, amount);
+            await AddBalance(payTo, amount).ConfigureAwait(false);
             return true;
         }
 
@@ -55,7 +62,7 @@ namespace MatsueNet.Services
 
                 user.Balance += (double) amount / 100;
                 user.Balance = Math.Round(user.Balance, 2);
-                
+
                 await _databaseService.UpdateUser(user);
             }
         }

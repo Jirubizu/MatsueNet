@@ -17,11 +17,18 @@ namespace MatsueNet.Modules.Games
         }
 
         [Command("osustats"), Summary("Get osu stats from a username"), Alias("ostats")]
+        public async Task OsuStats(string username)
+        {
+            await OsuStats(username, GameMode.Standard);
+        }
+
+        [Command("osustats"), Summary("Get osu stats from a username"), Alias("ostats")]
         public async Task OsuStats(string username, GameMode gamemode = GameMode.Standard)
         {
             var user = await _osuService.GetUser(username, gamemode);
             var embed = new EmbedBuilder();
-            embed.WithAuthor("Osu", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Osu%21Logo_%282015%29.png/800px-Osu%21Logo_%282015%29.png");
+            embed.WithAuthor("Osu",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Osu%21Logo_%282015%29.png/800px-Osu%21Logo_%282015%29.png");
             embed.WithDescription($"Global Rank: #{user.Rank:n0} | Country Rank: #{user.CountryRank:n0}");
 
             embed.WithTitle($"Stats for {username} | {gamemode}");
@@ -37,8 +44,12 @@ namespace MatsueNet.Modules.Games
             embed.AddField("S Hidden", user.CountSH, true);
             embed.AddField("S", user.CountS, true);
             embed.AddField("A", user.CountA, true);
-            embed.AddField("Time Played", $"{user.TimePlayed.Days}d {user.TimePlayed.Hours}h {user.TimePlayed.Minutes}m", true);
-            if (user.JoinDate != null) embed.AddField("Join Date", user.JoinDate.Value.ToString("f"));
+            embed.AddField("Time Played",
+                $"{user.TimePlayed.Days}d {user.TimePlayed.Hours}h {user.TimePlayed.Minutes}m", true);
+            if (user.JoinDate != null)
+            {
+                embed.AddField("Join Date", user.JoinDate.Value.ToString("f"));
+            }
 
             embed.WithColor(Color.Magenta);
 

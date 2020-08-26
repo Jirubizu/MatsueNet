@@ -20,7 +20,13 @@ namespace MatsueNet.Modules
 
         // Anime
         [Command("anisearch")]
-        public async Task AniSearch(string anime, int page = 0)
+        public Task AniSearch(string anime)
+        {
+            return AniSearch(anime, 0);
+        }
+
+        [Command("anisearch")]
+        public async Task AniSearch(string anime, int page)
         {
             var foundAnime = await _aniClient.SearchMediaAsync(anime, page, true, MediaType.ANIME);
 
@@ -79,9 +85,17 @@ namespace MatsueNet.Modules
             await SendEmbedAsync(embed.Build());
         }
 
+        
+        
         // Manga
         [Command("mansearch")]
-        public async Task ManSearch(string manga, int page = 0)
+        public async Task ManSearch(string manga)
+        {
+            await ManSearch(manga, 0);
+        }
+        
+        [Command("mansearch")]
+        public async Task ManSearch(string manga, int page)
         {
             var foundManga = await _aniClient.SearchMediaAsync(manga, page, true, MediaType.MANGA);
 
@@ -147,7 +161,13 @@ namespace MatsueNet.Modules
 
         // Character
         [Command("chasearch")]
-        public async Task ChaSearch(string character, int page = 0)
+        public Task ChaSearch(string character)
+        {
+            return ChaSearch(character, 0);
+        }
+
+        [Command("chasearch")]
+        public async Task ChaSearch(string character, int page)
         {
             var foundCharacter = await _aniClient.SearchCharactersAsync(character, page);
 

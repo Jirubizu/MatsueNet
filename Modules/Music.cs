@@ -369,7 +369,7 @@ namespace MatsueNet.Modules
         }
 
         [Command("Volume"), Summary("Set the volume of the bot")]
-        public async Task Volume(ushort volume)
+        public async Task Volume(ushort volumeValue)
         {
             if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
             {
@@ -379,8 +379,8 @@ namespace MatsueNet.Modules
 
             try
             {
-                await player.UpdateVolumeAsync(volume);
-                await SendSuccessAsync($"I've changed the player volume to {volume}.");
+                await player.UpdateVolumeAsync(volumeValue);
+                await SendSuccessAsync($"I've changed the player volume to {volumeValue}.");
             }
             catch (Exception exception)
             {

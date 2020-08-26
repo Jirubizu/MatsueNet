@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace MatsueNet.Structures
 {
-    public struct ConfigStruct
+    public struct ConfigStruct : IEquatable<ConfigStruct>
     {
         [JsonProperty("bot_token")]
         public string BotToken { get; set; }
@@ -26,5 +27,10 @@ namespace MatsueNet.Structures
         
         [JsonProperty("lavalink_password")]
         public string LavaLinkPassword { get; set; }
+
+        public bool Equals(ConfigStruct other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

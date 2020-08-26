@@ -7,14 +7,24 @@ namespace MatsueNet
 {
     public class MatsueModule : ModuleBase<ShardedCommandContext>
     {
-        protected async Task<IUserMessage> SendFileAsync(string filePath, string text = null, bool isTTS = false,
-            Embed embed = null, RequestOptions options = null, bool isSpoiler = false)
+        protected async Task<IUserMessage> SendFileAsync(string filePath)
         {
-            return await Context.Channel.SendFileAsync(filePath, text, isTTS, embed, options, isSpoiler);
+            return await Context.Channel.SendFileAsync(filePath, null, false, null, null, false);
         }
 
-        protected async Task<IUserMessage> SendFileAsync(Stream stream, string filename, string text = null,
-            bool isTts = false, Embed embed = null, RequestOptions options = null, bool isSpoiler = false)
+        protected async Task<IUserMessage> SendFileAsync(string filePath, string text, bool isTts, Embed embed,
+            RequestOptions options, bool isSpoiler)
+        {
+            return await Context.Channel.SendFileAsync(filePath, text, isTts, embed, options, isSpoiler);
+        }
+
+        protected async Task<IUserMessage> SendFileAsync(Stream stream, string filename)
+        {
+            return await SendFileAsync(stream, filename, null, false, null, null, false);
+        }
+
+        protected async Task<IUserMessage> SendFileAsync(Stream stream, string filename, string text, bool isTts,
+            Embed embed, RequestOptions options, bool isSpoiler)
         {
             return await Context.Channel.SendFileAsync(stream, filename, text, isTts, embed, options, isSpoiler);
         }
@@ -26,7 +36,7 @@ namespace MatsueNet
 
         protected async Task<IUserMessage> SendErrorAsync(string error)
         {
-            return await SendErrorAsync("Error", error);
+            return await SendErrorAsync("Error", error).ConfigureAwait(false);
         }
 
         protected async Task<IUserMessage> SendErrorAsync(string title, string description)

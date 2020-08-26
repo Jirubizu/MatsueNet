@@ -86,15 +86,21 @@ namespace MatsueNet.Services
 
         private async Task OnMessageReceived(SocketMessage msg)
         {
-            if (!(msg is SocketUserMessage message)) return;
+            if (!(msg is SocketUserMessage message))
+            {
+                return;
+            }
 
-            if (message.Author.IsBot) return;
+            if (message.Author.IsBot)
+            {
+                return;
+            }
 
-            var result = await LoadRecordsByUserId(message.Author.Id);
+            var result = await LoadRecordsByUserId(message.Author.Id).ConfigureAwait(false);
             if (result == null)
             {
                 await InsertRecord("users",
-                    new MatsueUserBson {UserId = message.Author.Id, Balance = 0, Married = false, MarriedTo = null});
+                    new MatsueUserBson {UserId = message.Author.Id, Balance = 0, Married = false, MarriedTo = null}).ConfigureAwait(false);
             }
         }
 
@@ -104,12 +110,12 @@ namespace MatsueNet.Services
                 new MatsueGuildBson
                 {
                     GuildId = arg.Id, MusicChannelId = null, BotChannelId = null, AdminChannelId = null, Prefix = "!"
-                });
+                }).ConfigureAwait(false);
         }
 
         private async Task OnLeftGuild(SocketGuild arg)
         {
-            await DeleteGuildRecord(arg.Id);
+            await DeleteGuildRecord(arg.Id).ConfigureAwait(false);
         }
     }
 }
