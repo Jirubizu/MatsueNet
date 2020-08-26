@@ -6,7 +6,7 @@ namespace MatsueNet.Services
 {
     public class ConfigService
     {
-        public ConfigStruct Config;
+        public ConfigStruct Config { get; }
 
         public ConfigService(string path)
         {

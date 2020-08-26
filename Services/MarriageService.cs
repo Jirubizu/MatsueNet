@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
@@ -15,7 +16,7 @@ namespace MatsueNet.Services
             _client = client;
         }
 
-        public async Task<ulong?> Marry(ulong user,  ulong toMarry)
+        public async Task<ulong?> Marry(ulong user, ulong toMarry)
         {
             var marriedTo = await MarriedTo(user).ConfigureAwait(false);
             if (marriedTo != null)
@@ -23,10 +24,10 @@ namespace MatsueNet.Services
                 return marriedTo;
             }
             // _databaseService.UpdateUser()
-            
+
             return null;
         }
-        
+
         public async Task<ulong?> MarriedTo(ulong user)
         {
             var result = await _databaseService.LoadRecordsByUserId(user);
@@ -35,23 +36,26 @@ namespace MatsueNet.Services
 
         public async Task Propose(ulong proposing, ulong proposeTo)
         {
-            
+            // Implemented in next iteration
+            throw new NotSupportedException();
         }
 
         public async Task ListProposals(ulong user)
         {
-            
+            // Implemented in next iteration
+            throw new NotSupportedException();
         }
 
         public async Task AcceptProposal(ulong userToAccept)
         {
-            
+            // Implemented in next iteration
+            throw new NotSupportedException();
         }
 
         public async Task DenyProposal(ulong userToDeny)
         {
-            
+            // Implemented in next iteration
+            throw new NotSupportedException();
         }
-        
     }
 }

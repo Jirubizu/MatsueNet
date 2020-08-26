@@ -10,7 +10,7 @@ namespace MatsueNet.Services
     public class MusicService
     {
         private readonly LavaNode _lavaNode;
-        public readonly HashSet<ulong> VoteQueue;
+        public HashSet<ulong> VoteQueue { get; }
 
         public MusicService(LavaNode lNode, DiscordShardedClient sc)
         {
