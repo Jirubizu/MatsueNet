@@ -31,14 +31,14 @@ namespace MatsueNet.Modules
         [Command("Ban"), Summary("Ban a selected user given their mention")]
         public async Task Ban(SocketUser user)
         {
-            await Ban(user.Id, "");
+            await Ban(user.Id, "").ConfigureAwait(false);
         }
 
         [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
         [Command("Ban"), Summary("Ban a selected user given their mention")]
         public async Task Ban(ulong user)
         {
-            await Ban(user, "");
+            await Ban(user, "").ConfigureAwait(false);
         }
 
 
@@ -46,7 +46,7 @@ namespace MatsueNet.Modules
         [Command("Ban"), Summary("Ban a selected user given their mention")]
         public async Task Ban(SocketUser user, [Remainder] string reason)
         {
-            await Ban(user.Id, reason);
+            await Ban(user.Id, reason).ConfigureAwait(false);
         }
 
         [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
