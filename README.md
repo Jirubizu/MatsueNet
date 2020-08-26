@@ -8,7 +8,7 @@ Originally, I was learning nodejs and made a discord bot in js. However, I left 
 ## Database structure
 The database is based on MongoDB. There are currently two documents (tables) one is to hold the data for each user and another is to hold the server data.
 
-#### Users document 
+### Users document 
 ```json
 {
     "_id": {
@@ -24,7 +24,7 @@ The database is based on MongoDB. There are currently two documents (tables) one
     "balance": 1.04
 }
 ```
-#### Guilds document
+### Guilds document
 ```json
     "_id": {
         "$oid": "Unique entry id"
