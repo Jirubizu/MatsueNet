@@ -91,7 +91,7 @@ namespace MatsueNet.Modules
         [Command("mansearch")]
         public async Task ManSearch(string manga)
         {
-            await ManSearch(manga, 0);
+            await ManSearch(manga, 0).ConfigureAwait(false);
         }
         
         [Command("mansearch")]

@@ -524,10 +524,11 @@ namespace MatsueNet.Modules
             };
             embed.AddField("Now Playing", $"{player.Track.Title} || {player.Track.Queued.Mention}");
 
-            var queue = "";
+            var queue = new StringBuilder();
             for (var index = 0; index < player.Queue.Count; index++)
             {
-                queue += $"{index + 1}: {((LavaTrack)player.Queue.ElementAt(index)).Title} || {((LavaTrack)player.Queue.ElementAt(index)).Queued.Username}\n";
+                queue.Append(
+                    $"{index + 1}: {((LavaTrack) player.Queue.ElementAt(index)).Title} || {((LavaTrack) player.Queue.ElementAt(index)).Queued.Username}\n");
             }
 
             embed.AddField("Up Next", queue);

@@ -20,7 +20,7 @@ namespace MatsueNet
 
         protected async Task<IUserMessage> SendFileAsync(Stream stream, string filename)
         {
-            return await SendFileAsync(stream, filename, null, false, null, null, false);
+            return await SendFileAsync(stream, filename, null, false, null, null, false).ConfigureAwait(false);
         }
 
         protected async Task<IUserMessage> SendFileAsync(Stream stream, string filename, string text, bool isTts,

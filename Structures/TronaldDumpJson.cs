@@ -65,10 +65,15 @@ namespace MatsueNet.Structures
         }
     }
 
-    public struct LinkJson
+    public struct LinkJson : IEquatable<LinkJson>
     {
         [JsonProperty("self")]
         public UriJson Uri { get; set; }
+
+        public bool Equals(LinkJson other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public struct UriJson : IEquatable<UriJson>

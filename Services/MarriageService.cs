@@ -17,7 +17,7 @@ namespace MatsueNet.Services
 
         public async Task<ulong?> Marry(ulong user,  ulong toMarry)
         {
-            var marriedTo = await MarriedTo(user);
+            var marriedTo = await MarriedTo(user).ConfigureAwait(false);
             if (marriedTo != null)
             {
                 return marriedTo;

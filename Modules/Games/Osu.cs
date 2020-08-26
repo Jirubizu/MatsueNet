@@ -19,7 +19,7 @@ namespace MatsueNet.Modules.Games
         [Command("osustats"), Summary("Get osu stats from a username"), Alias("ostats")]
         public async Task OsuStats(string username)
         {
-            await OsuStats(username, GameMode.Standard);
+            await OsuStats(username, GameMode.Standard).ConfigureAwait(false);
         }
 
         [Command("osustats"), Summary("Get osu stats from a username"), Alias("ostats")]

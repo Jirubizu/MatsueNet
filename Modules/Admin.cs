@@ -108,7 +108,7 @@ namespace MatsueNet.Modules
         [Command("cleanup"), Summary("Cleanup bot input and output from channel.")]
         public async Task Cleanup()
         {
-            await Cleanup(25);
+            await Cleanup(25).ConfigureAwait(false);
         }
 
         [RequireUserPermission(GuildPermission.ManageMessages), RequireBotPermission(GuildPermission.ManageMessages)]
