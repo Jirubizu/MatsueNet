@@ -64,7 +64,7 @@ namespace MatsueNet.Modules
                 return;
             }
 
-            var voiceChannel = ((IVoiceState)Context.User).VoiceChannel ?? player.VoiceChannel;
+            var voiceChannel = ((IVoiceState) Context.User).VoiceChannel ?? player.VoiceChannel;
             if (voiceChannel == null)
             {
                 await SendErrorAsync("Not sure which voice channel to disconnect from.");
@@ -157,20 +157,7 @@ namespace MatsueNet.Modules
                     {
                         if (i == 0)
                         {
-                            await player.PlayAsync(track);
-                            var artwork = await track.FetchArtworkAsync();
-                            var embed = new EmbedBuilder()
-                                .WithAuthor("Now Playing", Context.Client.CurrentUser.GetAvatarUrl())
-                                .WithTitle(track.Title)
-                                .WithUrl(track.Url)
-                                .WithThumbnailUrl(artwork)
-                                .AddField("Channel", track.Author, true)
-                                .AddField("Duration", track.Duration, true)
-                                .WithFooter($"Requested By {track.Queued.Username}")
-                                .WithColor(Color.Teal)
-                                .Build();
-
-                            await SendEmbedAsync(embed);
+                            await SendPlayingEmbed(player, track);
                         }
                         else
                         {
@@ -182,23 +169,11 @@ namespace MatsueNet.Modules
                 }
                 else
                 {
-                    await player.PlayAsync(track);
-                    var artwork = await track.FetchArtworkAsync();
-                    var embed = new EmbedBuilder()
-                        .WithAuthor("Now Playing", Context.Client.CurrentUser.GetAvatarUrl())
-                        .WithTitle(track.Title)
-                        .WithUrl(track.Url)
-                        .WithThumbnailUrl(artwork)
-                        .AddField("Channel", track.Author, true)
-                        .AddField("Duration", track.Duration, true)
-                        .WithFooter($"Requested By {track.Queued.Username}")
-                        .WithColor(Color.Teal)
-                        .Build();
-
-                    await SendEmbedAsync(embed);
+                    await SendPlayingEmbed(player, track);
                 }
             }
         }
+
 
         [Command("Pause"), Summary("Pause the bot at the current location")]
         public async Task Pause()
@@ -307,7 +282,7 @@ namespace MatsueNet.Modules
                 return;
             }
 
-            var voiceChannelUsers = ((SocketVoiceChannel)player.VoiceChannel).Users.Where(x => !x.IsBot).ToArray();
+            var voiceChannelUsers = ((SocketVoiceChannel) player.VoiceChannel).Users.Where(x => !x.IsBot).ToArray();
             if (_musicService.VoteQueue.Contains(Context.User.Id) && voiceChannelUsers.Count() != 1)
             {
                 await SendErrorAsync("You can't vote again.");
@@ -391,15 +366,9 @@ namespace MatsueNet.Modules
         [Command("NowPlaying"), Summary("Display the current track that is being played"), Alias("Np")]
         public async Task NowPlaying()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            var player = await IsPlayingConnected();
+            if (player == null)
             {
-                await SendWarningAsync("I'm not connected to a voice channel.");
-                return;
-            }
-
-            if (player.PlayerState != PlayerState.Playing)
-            {
-                await SendWarningAsync("Woaaah there, I'm not playing any tracks.");
                 return;
             }
 
@@ -420,19 +389,14 @@ namespace MatsueNet.Modules
             await SendEmbedAsync(embed.Build());
         }
 
+
         //TODO: add the paging system to both of the lyrics systems
         [Command("Genius", RunMode = RunMode.Async), Summary("Display the lyrics from genius site")]
         public async Task ShowGeniusLyrics()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            var player = await IsPlayingConnected();
+            if (player == null)
             {
-                await SendWarningAsync("I'm not connected to a voice channel.");
-                return;
-            }
-
-            if (player.PlayerState != PlayerState.Playing)
-            {
-                await SendWarningAsync("Woaaah there, I'm not playing any tracks.");
                 return;
             }
 
@@ -464,15 +428,9 @@ namespace MatsueNet.Modules
         [Command("OVH", RunMode = RunMode.Async), Summary("Display the lyrics from ovh site")]
         public async Task ShowOvhLyrics()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            var player = await IsPlayingConnected();
+            if (player == null)
             {
-                await SendWarningAsync("I'm not connected to a voice channel.");
-                return;
-            }
-
-            if (player.PlayerState != PlayerState.Playing)
-            {
-                await SendWarningAsync("Woaaah there, I'm not playing any tracks.");
                 return;
             }
 
@@ -536,7 +494,8 @@ namespace MatsueNet.Modules
             await SendEmbedAsync(embed.Build());
         }
 
-        [Command("removequeue", RunMode = RunMode.Async), Summary("Remove a given track from the list using the index"), Alias("rm")]
+        [Command("removequeue", RunMode = RunMode.Async), Summary("Remove a given track from the list using the index"),
+         Alias("rm")]
         public async Task RemoveFromQueue(int index)
         {
             if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
@@ -560,6 +519,41 @@ namespace MatsueNet.Modules
             player.Queue.RemoveAt(index - 1);
 
             await SendSuccessAsync("Removed from queue");
+        }
+
+        private async Task SendPlayingEmbed(LavaPlayer player, LavaTrack track)
+        {
+            await player.PlayAsync(track);
+            var artwork = await track.FetchArtworkAsync();
+            var embed = new EmbedBuilder()
+                .WithAuthor("Now Playing", Context.Client.CurrentUser.GetAvatarUrl())
+                .WithTitle(track.Title)
+                .WithUrl(track.Url)
+                .WithThumbnailUrl(artwork)
+                .AddField("Channel", track.Author, true)
+                .AddField("Duration", track.Duration, true)
+                .WithFooter($"Requested By {track.Queued.Username}")
+                .WithColor(Color.Teal)
+                .Build();
+
+            await SendEmbedAsync(embed);
+        }
+
+        private async Task<LavaPlayer> IsPlayingConnected()
+        {
+            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            {
+                await SendWarningAsync("I'm not connected to a voice channel.");
+                return null;
+            }
+
+            if (player.PlayerState != PlayerState.Playing)
+            {
+                await SendWarningAsync("Woaaah there, I'm not playing any tracks.");
+                return null;
+            }
+
+            return player;
         }
     }
 }

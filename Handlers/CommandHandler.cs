@@ -35,7 +35,7 @@ namespace MatsueNet.Handlers
 
         private async Task HandleCommandAsync(SocketMessage msg)
         {
-            int argPos = 0;
+            var argPos = 0;
             if (!(msg is SocketUserMessage message))
             {
                 return;
