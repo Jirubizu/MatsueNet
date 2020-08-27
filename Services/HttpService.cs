@@ -128,7 +128,7 @@ namespace MatsueNet.Services
             {
                 try
                 {
-                    return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync().ConfigureAwait(false));
+                    return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync());
                 }
                 catch
                 {
@@ -155,7 +155,7 @@ namespace MatsueNet.Services
             {
                 try
                 {
-                    return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync().ConfigureAwait(false));
+                    return JsonConvert.DeserializeObject<T>(await reader.ReadToEndAsync());
                 }
                 catch
                 {

@@ -18,12 +18,8 @@ namespace MatsueNet
         private readonly CommandService _commandService;
         private ConfigService _config;
         private LavaConfig _lavaConfig;
-
-        public MatsueNet() : this(null, null)
-        {
-        }
-
-        public MatsueNet(DiscordShardedClient client, CommandService commandService)
+        
+        public MatsueNet(DiscordShardedClient client = null, CommandService commandService = null)
         {
             _client = client ?? new DiscordShardedClient(new DiscordSocketConfig
             {
@@ -55,7 +51,7 @@ namespace MatsueNet
             var commandHandler = services.GetRequiredService<CommandHandler>();
             await commandHandler.SetupAsync();
 
-            await Task.Delay(-1).ConfigureAwait(false);
+            await Task.Delay(-1);
         }
 
         private IServiceProvider SetupServices() => new ServiceCollection()

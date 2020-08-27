@@ -21,7 +21,7 @@ namespace MatsueNet.Services
 
         public async Task<List<MinecraftNamesJson>> GetNames(string username)
         {
-            var result = await GetUuid(username).ConfigureAwait(false);
+            var result = await GetUuid(username);
             return await _httpService.GetJsonAsync<List<MinecraftNamesJson>>($"https://api.mojang.com/user/profiles/{result.Uuid}/names");
         }
     }

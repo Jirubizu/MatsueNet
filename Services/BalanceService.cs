@@ -43,13 +43,13 @@ namespace MatsueNet.Services
 
         public async Task<bool> Pay(ulong payTo, ulong paying, double amount)
         {
-            var result = await SubBalance(paying, amount).ConfigureAwait(false);
+            var result = await SubBalance(paying, amount);
             if (!result)
             {
                 return false;
             }
 
-            await AddBalance(payTo, amount).ConfigureAwait(false);
+            await AddBalance(payTo, amount);
             return true;
         }
 

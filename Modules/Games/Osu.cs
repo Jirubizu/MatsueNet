@@ -17,13 +17,7 @@ namespace MatsueNet.Modules.Games
         }
 
         [Command("osustats"), Summary("Get osu stats from a username"), Alias("ostats")]
-        public async Task OsuStats(string username)
-        {
-            await OsuStats(username, GameMode.Standard).ConfigureAwait(false);
-        }
-
-        [Command("osustats"), Summary("Get osu stats from a username"), Alias("ostats")]
-        public async Task OsuStats(string username, GameMode gamemode)
+        public async Task OsuStats(string username, GameMode gamemode = GameMode.Standard)
         {
             var user = await _osuService.GetUser(username, gamemode);
             var embed = new EmbedBuilder();

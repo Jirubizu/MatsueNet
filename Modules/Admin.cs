@@ -26,32 +26,18 @@ namespace MatsueNet.Modules
             _database = db;
             _interactivity = iss;
         }
+        
 
         [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
         [Command("Ban"), Summary("Ban a selected user given their mention")]
-        public async Task Ban(SocketUser user)
+        public async Task Ban(SocketUser user, [Remainder] string reason = "")
         {
-            await Ban(user.Id, "").ConfigureAwait(false);
-        }
-
-        [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
-        [Command("Ban"), Summary("Ban a selected user given their mention")]
-        public async Task Ban(ulong user)
-        {
-            await Ban(user, "").ConfigureAwait(false);
-        }
-
-
-        [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
-        [Command("Ban"), Summary("Ban a selected user given their mention")]
-        public async Task Ban(SocketUser user, [Remainder] string reason)
-        {
-            await Ban(user.Id, reason).ConfigureAwait(false);
+            await Ban(user.Id, reason);
         }
 
         [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
         [Command("Ban"), Summary("Ban a selected user given their user id")]
-        public async Task Ban(ulong id, [Remainder] string reason)
+        public async Task Ban(ulong id, [Remainder] string reason = "")
         {
             try
             {
@@ -83,14 +69,7 @@ namespace MatsueNet.Modules
 
         [RequireUserPermission(GuildPermission.ManageMessages), RequireBotPermission(GuildPermission.ManageMessages)]
         [Command("Purge"), Summary("Remove the provided amount of messages from the channel")]
-        public Task Purge()
-        {
-            return Purge(25);
-        }
-
-        [RequireUserPermission(GuildPermission.ManageMessages), RequireBotPermission(GuildPermission.ManageMessages)]
-        [Command("Purge"), Summary("Remove the provided amount of messages from the channel")]
-        public async Task Purge([Range(1, 100)] int amount)
+        public async Task Purge([Range(1, 100)] int amount = 25)
         {
             if (Context.Channel is ITextChannel channel)
             {
@@ -106,14 +85,7 @@ namespace MatsueNet.Modules
 
         [RequireUserPermission(GuildPermission.ManageMessages), RequireBotPermission(GuildPermission.ManageMessages)]
         [Command("cleanup"), Summary("Cleanup bot input and output from channel.")]
-        public async Task Cleanup()
-        {
-            await Cleanup(25).ConfigureAwait(false);
-        }
-
-        [RequireUserPermission(GuildPermission.ManageMessages), RequireBotPermission(GuildPermission.ManageMessages)]
-        [Command("cleanup"), Summary("Cleanup bot input and output from channel.")]
-        public async Task Cleanup([Range(1, 100)] int amount)
+        public async Task Cleanup([Range(1, 100)] int amount = 25)
         {
             if (Context.Channel is ITextChannel channel)
             {
