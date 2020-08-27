@@ -157,7 +157,7 @@ namespace MatsueNet.Modules
                     {
                         if (i == 0)
                         {
-                            await SendPlayingEmbed(player, track);
+                            await SendPlayingEmbed(player, track).ConfigureAwait(false);
                         }
                         else
                         {
@@ -169,7 +169,7 @@ namespace MatsueNet.Modules
                 }
                 else
                 {
-                    await SendPlayingEmbed(player, track);
+                    await SendPlayingEmbed(player, track).ConfigureAwait(false);
                 }
             }
         }
@@ -366,7 +366,7 @@ namespace MatsueNet.Modules
         [Command("NowPlaying"), Summary("Display the current track that is being played"), Alias("Np")]
         public async Task NowPlaying()
         {
-            var player = await IsPlayingConnected();
+            var player = await IsPlayingConnected().ConfigureAwait(false);
             if (player == null)
             {
                 return;
@@ -394,7 +394,7 @@ namespace MatsueNet.Modules
         [Command("Genius", RunMode = RunMode.Async), Summary("Display the lyrics from genius site")]
         public async Task ShowGeniusLyrics()
         {
-            var player = await IsPlayingConnected();
+            var player = await IsPlayingConnected().ConfigureAwait(false);
             if (player == null)
             {
                 return;
@@ -428,7 +428,7 @@ namespace MatsueNet.Modules
         [Command("OVH", RunMode = RunMode.Async), Summary("Display the lyrics from ovh site")]
         public async Task ShowOvhLyrics()
         {
-            var player = await IsPlayingConnected();
+            var player = await IsPlayingConnected().ConfigureAwait(false);
             if (player == null)
             {
                 return;
