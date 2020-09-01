@@ -59,8 +59,6 @@ The database is based on MongoDB. There are currently two documents (tables) one
 ## Prerequisites
  - Discord.Net
  - [Lavalink](https://github.com/Frederikam/Lavalink)
- - Victoria (Provided) 
-
- Test
+ - Victoria (Provided)
 
 
