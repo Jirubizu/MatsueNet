@@ -45,7 +45,7 @@ The database is based on MongoDB. There are currently two documents (tables) one
 ```
 
 ## Todo List
-- [ ] Implement checks to make sure commands are only executed in specefic channels if the bot it setup that way
+- [x] Implement checks to make sure commands are only executed in specefic channels if the bot it setup that way
 - [ ] Implement marriage system
   - [ ] Allow people to see who someone is married
   - [ ] Only allow 1 across all of discord (global marraige)
