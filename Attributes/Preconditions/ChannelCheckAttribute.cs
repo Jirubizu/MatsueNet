@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Discord.Commands;
 using MatsueNet.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MatsueNet.Preconditions
+namespace MatsueNet.Attributes.Preconditions
 {
     public class ChannelCheckAttribute : PreconditionAttribute
     {

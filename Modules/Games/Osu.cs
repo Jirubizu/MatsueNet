@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using MatsueNet.Preconditions;
+using MatsueNet.Attributes.Preconditions;
 using MatsueNet.Services;
 using OsuSharp;
 

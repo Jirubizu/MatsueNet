@@ -2,7 +2,7 @@ using System;
 using Discord;
 using Discord.Commands;
 using System.Threading.Tasks;
-using MatsueNet.Preconditions;
+using MatsueNet.Attributes.Preconditions;
 using MatsueNet.Services;
 
 namespace MatsueNet.Modules.Games

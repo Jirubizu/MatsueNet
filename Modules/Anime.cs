@@ -4,7 +4,7 @@ using Discord.Commands;
 using Miki.Anilist;
 using System.Threading.Tasks;
 using Discord;
-using MatsueNet.Preconditions;
+using MatsueNet.Attributes.Preconditions;
 using MatsueNet.Utils;
 
 namespace MatsueNet.Modules

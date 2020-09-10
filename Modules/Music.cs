@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using MatsueNet.Attributes.Preconditions;
 using MatsueNet.Services;
 using MatsueNet.Extentions;
-using MatsueNet.Preconditions;
 using Victoria;
 using Victoria.Enums;
 
