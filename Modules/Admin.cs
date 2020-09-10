@@ -10,9 +10,11 @@ using Interactivity;
 using Interactivity.Pagination;
 using MatsueNet.Attributes.Parameter;
 using MatsueNet.Extentions;
+using MatsueNet.Preconditions;
 
 namespace MatsueNet.Modules
 {
+    [ChannelCheck(Channels.Admin,Channels.Bot)]
     [Summary("Admin management commands")]
     public class Admin : MatsueModule
     {
@@ -121,7 +123,7 @@ namespace MatsueNet.Modules
 
         [RequireUserPermission(GuildPermission.ManageChannels), RequireBotPermission(ChannelPermission.ManageChannels)]
         [Command("SetMusicChannel"), Summary("Set the channel where the bot should only listen to bot commands in")]
-        public async Task SetMusicChannel(SocketTextChannel channel)
+        public async Task SetMusicChannel(SocketTextChannel channel = null)
         {
             if (!(Context.Message.Channel is SocketGuildChannel guildChannel))
             {
@@ -129,15 +131,16 @@ namespace MatsueNet.Modules
             }
 
             var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
-            current.MusicChannelId = channel.Id;
+
+            current.MusicChannelId = channel?.Id;
             await _database.UpdateGuild(current);
 
-            await SendSuccessAsync($"Successfully set the music channel to {guildChannel.Name}");
+            await SendSuccessAsync(channel != null ? $"Successfully set the music channel to {channel.Name}" : "Successfully un linked the bot from previous channel");
         }
 
         [RequireUserPermission(GuildPermission.ManageChannels), RequireBotPermission(ChannelPermission.ManageChannels)]
         [Command("SetAdminChannel"), Summary("Set the channel in which only admin commands should work")]
-        public async Task SetAdminChannel(SocketTextChannel channel)
+        public async Task SetAdminChannel(SocketTextChannel channel = null)
         {
             if (!(Context.Message.Channel is SocketGuildChannel guildChannel))
             {
@@ -145,15 +148,15 @@ namespace MatsueNet.Modules
             }
 
             var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
-            current.AdminChannelId = channel.Id;
+            current.AdminChannelId = channel?.Id;
             await _database.UpdateGuild(current);
 
-            await SendSuccessAsync($"Successfully set the admin channel to {guildChannel.Name}");
+            await SendSuccessAsync(channel != null ? $"Successfully set the admin channel to {channel.Name}" : "Successfully un linked the bot from previous channel");
         }
 
         [RequireUserPermission(GuildPermission.ManageChannels), RequireBotPermission(ChannelPermission.ManageChannels)]
         [Command("SetBotChannel"), Summary("Set the channel in which the bot should only listen to")]
-        public async Task SetBotChannel(SocketTextChannel channel)
+        public async Task SetBotChannel(SocketTextChannel channel = null)
         {
             if (!(Context.Message.Channel is SocketGuildChannel guildChannel))
             {
@@ -161,10 +164,10 @@ namespace MatsueNet.Modules
             }
 
             var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
-            current.BotChannelId = channel.Id;
+            current.BotChannelId = channel?.Id;
             await _database.UpdateGuild(current);
 
-            await SendSuccessAsync($"Successfully set the bot channel to {guildChannel.Name}");
+            await SendSuccessAsync(channel != null ? $"Successfully set the bot channel to {channel.Name}" : "Successfully un linked the bot from previous channel");
         }
 
         [Command("whois"), Summary("Find out who has certain roles [use a ', ' as a separator]"), Alias("whoi")]

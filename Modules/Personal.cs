@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using MatsueNet.Preconditions;
 using MatsueNet.Services;
 
 namespace MatsueNet.Modules
 {
+    [ChannelCheck(Channels.Bot)]
     [Summary("Personal commands")]
     public class Personal : MatsueModule
     {

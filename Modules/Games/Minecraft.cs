@@ -2,10 +2,12 @@ using System;
 using Discord;
 using Discord.Commands;
 using System.Threading.Tasks;
+using MatsueNet.Preconditions;
 using MatsueNet.Services;
 
 namespace MatsueNet.Modules.Games
 {
+    [ChannelCheck(Channels.Bot)]
     [Summary("Minecraft related commands")]
     public class Minecraft : MatsueModule
     {

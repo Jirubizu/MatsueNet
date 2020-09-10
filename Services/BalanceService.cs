@@ -59,11 +59,12 @@ namespace MatsueNet.Services
             {
                 var amount = _randomService.Next(1, 15);
                 var user = await _databaseService.LoadRecordsByUserId(userId);
-
-                user.Balance += (double) amount / 100;
-                user.Balance = Math.Round(user.Balance, 2);
-
-                await _databaseService.UpdateUser(user);
+                if (user != null)
+                {
+                    user.Balance += (double) amount / 100;
+                    user.Balance = Math.Round(user.Balance, 2);
+                    await _databaseService.UpdateUser(user);
+                }
             }
         }
     }

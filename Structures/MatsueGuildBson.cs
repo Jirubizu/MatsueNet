@@ -26,8 +26,5 @@ namespace MatsueNet.Structures
 
         [BsonElement("prefix")]
         public string Prefix { get; set; }
-
-        [BsonElement("scaled_channels")]
-        public List<SocketVoiceChannelBson> ScaledChannels { get; set; }
     }
 }

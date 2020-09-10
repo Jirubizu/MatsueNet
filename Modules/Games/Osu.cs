@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using MatsueNet.Preconditions;
 using MatsueNet.Services;
 using OsuSharp;
 
 namespace MatsueNet.Modules.Games
 {
+    [ChannelCheck(Channels.Bot)]
     [Summary("Osu stats commands")]
     public class Osu : MatsueModule
     {

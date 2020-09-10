@@ -8,11 +8,13 @@ using Discord.Commands;
 using Discord.WebSocket;
 using MatsueNet.Services;
 using MatsueNet.Extentions;
+using MatsueNet.Preconditions;
 using Victoria;
 using Victoria.Enums;
 
 namespace MatsueNet.Modules
 {
+    [ChannelCheck(Channels.Music, Channels.Bot)]
     [Summary("Music commands")]
     public class Music : MatsueModule
     {
@@ -21,7 +23,7 @@ namespace MatsueNet.Modules
         private readonly LavaNode _lavaNode;
         private readonly MusicService _musicService;
 
-        public Music(LavaNode lNode, MusicService mService)
+        public Music(LavaNode lNode, MusicService mService, DatabaseService databaseService)
         {
             _lavaNode = lNode;
             _musicService = mService;
@@ -55,7 +57,7 @@ namespace MatsueNet.Modules
             }
         }
 
-        [Command("Leave"), Summary("Make the bot disconnect from the current voice channel")]
+        [Command("Leave"), Summary("Make the bot disconnect from the current voice channel"), Alias()]
         public async Task Leave()
         {
             if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
@@ -82,7 +84,7 @@ namespace MatsueNet.Modules
             }
         }
 
-        [Command("Play"), Summary("Play the provided search term or url"), Alias("p")]
+        [Command("Play"), Summary("Play the provided search term or url"), Alias("p", "a")]
         public async Task Play([Remainder] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -547,13 +549,9 @@ namespace MatsueNet.Modules
                 return null;
             }
 
-            if (player.PlayerState != PlayerState.Playing)
-            {
-                await SendWarningAsync("Woaaah there, I'm not playing any tracks.");
-                return null;
-            }
-
-            return player;
+            if (player.PlayerState == PlayerState.Playing) return player;
+            await SendWarningAsync("Woaaah there, I'm not playing any tracks.");
+            return null;
         }
     }
 }
