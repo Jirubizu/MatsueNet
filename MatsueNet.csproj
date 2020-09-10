@@ -20,4 +20,14 @@
       <HintPath>.\dlls\Victoria.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="logs\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="logs\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="logs\**" />
+    <None Remove="MatsueNet.sln.DotSettings" />
+  </ItemGroup>
 </Project>
