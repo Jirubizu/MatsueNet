@@ -22,6 +22,7 @@ namespace MatsueNet.Modules
 
         public LavaNode LavaNode { get; set; }
         public MusicService MusicService { get; set; }
+        public PaginationService Paging { get; set; }
 
         [Command("Join"), Summary("Join the voice channel you are currently in")]
         public async Task Join()
@@ -403,13 +404,14 @@ namespace MatsueNet.Modules
                 return;
             }
 
+            var pages = new List<EmbedBuilder>();
             var splitLyrics = lyrics.Split('\n');
             var stringBuilder = new StringBuilder();
             foreach (var line in splitLyrics)
             {
                 if (Range.Contains(stringBuilder.Length))
                 {
-                    await ReplyAsync($"```{stringBuilder}```");
+                    pages.Add(new EmbedBuilder().WithDescription(stringBuilder.ToString()));
                     stringBuilder.Clear();
                 }
                 else
@@ -418,7 +420,9 @@ namespace MatsueNet.Modules
                 }
             }
 
-            await ReplyAsync($"```{stringBuilder}```");
+            pages.Add(new EmbedBuilder().WithDescription(stringBuilder.ToString()));
+            var paginator = new PaginatedMessage(pages, $"Lyrics for {player.Track.Title}", Color.Teal, Context.User, new AppearanceOptions{Timeout = TimeSpan.FromMinutes(4)});
+            await Paging.SendPaginatedMessageAsync(Context.Channel, paginator);
         }
 
         [Command("OVH", RunMode = RunMode.Async), Summary("Display the lyrics from ovh site")]
@@ -437,13 +441,14 @@ namespace MatsueNet.Modules
                 return;
             }
 
+            var pages = new List<EmbedBuilder>();
             var splitLyrics = lyrics.Split('\n');
             var stringBuilder = new StringBuilder();
             foreach (var line in splitLyrics)
             {
                 if (Range.Contains(stringBuilder.Length))
                 {
-                    await ReplyAsync($"```{stringBuilder}```");
+                    pages.Add(new EmbedBuilder().WithDescription(stringBuilder.ToString()));
                     stringBuilder.Clear();
                 }
                 else
@@ -452,7 +457,9 @@ namespace MatsueNet.Modules
                 }
             }
 
-            await ReplyAsync($"```{stringBuilder}```");
+            pages.Add(new EmbedBuilder().WithDescription(stringBuilder.ToString()));
+            var paginator = new PaginatedMessage(pages, $"Lyrics for {player.Track.Title}", Color.Teal, Context.User, new AppearanceOptions{Timeout = TimeSpan.FromMinutes(4)});
+            await Paging.SendPaginatedMessageAsync(Context.Channel, paginator);
         }
 
         [Command("queue", RunMode = RunMode.Async), Summary("View the current list of songs in the queue"), Alias("q")]
