@@ -20,19 +20,13 @@ namespace MatsueNet.Modules
     {
         private static readonly IEnumerable<int> Range = Enumerable.Range(1900, 2000);
 
-        private readonly LavaNode _lavaNode;
-        private readonly MusicService _musicService;
-
-        public Music(LavaNode lNode, MusicService mService, DatabaseService databaseService)
-        {
-            _lavaNode = lNode;
-            _musicService = mService;
-        }
+        public LavaNode LavaNode { get; set; }
+        public MusicService MusicService { get; set; }
 
         [Command("Join"), Summary("Join the voice channel you are currently in")]
         public async Task Join()
         {
-            if (_lavaNode.HasPlayer(Context.Guild))
+            if (LavaNode.HasPlayer(Context.Guild))
             {
                 await SendErrorAsync("I'm already connected to a voice channel!");
                 return;
@@ -48,7 +42,7 @@ namespace MatsueNet.Modules
 
             try
             {
-                await _lavaNode.JoinAsync(voiceState.VoiceChannel, Context.Channel as ITextChannel);
+                await LavaNode.JoinAsync(voiceState.VoiceChannel, Context.Channel as ITextChannel);
                 await SendSuccessAsync($"Joined {voiceState.VoiceChannel.Name}!");
             }
             catch (Exception exception)
@@ -60,7 +54,7 @@ namespace MatsueNet.Modules
         [Command("Leave"), Summary("Make the bot disconnect from the current voice channel"), Alias()]
         public async Task Leave()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendErrorAsync("I'm not connected to any voice channels!");
                 return;
@@ -75,7 +69,7 @@ namespace MatsueNet.Modules
 
             try
             {
-                await _lavaNode.LeaveAsync(voiceChannel);
+                await LavaNode.LeaveAsync(voiceChannel);
                 await SendSuccessAsync($"I've left {voiceChannel.Name}!");
             }
             catch (Exception exception)
@@ -93,17 +87,17 @@ namespace MatsueNet.Modules
                 return;
             }
 
-            if (!_lavaNode.HasPlayer(Context.Guild))
+            if (!LavaNode.HasPlayer(Context.Guild))
             {
                 await SendWarningAsync("I'm not connected to a voice channel.");
                 return;
             }
 
-            var searchResponse = await _lavaNode.SearchAsync(query);
+            var searchResponse = await LavaNode.SearchAsync(query);
 
             if (searchResponse.LoadStatus == LoadStatus.LoadFailed || searchResponse.LoadStatus == LoadStatus.NoMatches)
             {
-                searchResponse = await _lavaNode.SearchYouTubeAsync(query);
+                searchResponse = await LavaNode.SearchYouTubeAsync(query);
                 if (searchResponse.LoadStatus == LoadStatus.LoadFailed ||
                     searchResponse.LoadStatus == LoadStatus.NoMatches)
                 {
@@ -112,7 +106,7 @@ namespace MatsueNet.Modules
                 }
             }
 
-            var player = _lavaNode.GetPlayer(Context.Guild);
+            var player = LavaNode.GetPlayer(Context.Guild);
 
             if (player.PlayerState == PlayerState.Playing || player.PlayerState == PlayerState.Paused)
             {
@@ -180,7 +174,7 @@ namespace MatsueNet.Modules
         [Command("Pause"), Summary("Pause the bot at the current location")]
         public async Task Pause()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendWarningAsync("I'm not connected to a voice channel.");
                 return;
@@ -206,7 +200,7 @@ namespace MatsueNet.Modules
         [Command("Resume"), Summary("Resume the bot")]
         public async Task Resume()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendWarningAsync("I'm not connected to a voice channel.");
                 return;
@@ -246,7 +240,7 @@ namespace MatsueNet.Modules
         [Command("Stop"), Summary("Stop the bot from playing any music")]
         public async Task Stop()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendWarningAsync("I'm not connected to a voice channel.");
                 return;
@@ -272,7 +266,7 @@ namespace MatsueNet.Modules
         [Command("Skip"), Summary("Skip the current song")]
         public async Task Skip()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendWarningAsync("I'm not connected to a voice channel.");
                 return;
@@ -285,14 +279,14 @@ namespace MatsueNet.Modules
             }
 
             var voiceChannelUsers = ((SocketVoiceChannel) player.VoiceChannel).Users.Where(x => !x.IsBot).ToArray();
-            if (_musicService.VoteQueue.Contains(Context.User.Id) && voiceChannelUsers.Count() != 1)
+            if (MusicService.VoteQueue.Contains(Context.User.Id) && voiceChannelUsers.Count() != 1)
             {
                 await SendErrorAsync("You can't vote again.");
                 return;
             }
 
-            _musicService.VoteQueue.Add(Context.User.Id);
-            var percentage = _musicService.VoteQueue.Count / voiceChannelUsers.Length * 100;
+            MusicService.VoteQueue.Add(Context.User.Id);
+            var percentage = MusicService.VoteQueue.Count / voiceChannelUsers.Length * 100;
             if (percentage < 85)
             {
                 await SendWarningAsync("You need more than 85% votes to skip this song.");
@@ -322,7 +316,7 @@ namespace MatsueNet.Modules
         [Command("Seek"), Summary("Seek within a certain part of a song. Format = 0h0m0s")]
         public async Task Seek(TimeSpan timeSpan)
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendWarningAsync("I'm not connected to a voice channel.");
                 return;
@@ -348,7 +342,7 @@ namespace MatsueNet.Modules
         [Command("Volume"), Summary("Set the volume of the bot")]
         public async Task Volume(ushort volumeValue)
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendWarningAsync("I'm not connected to a voice channel.");
                 return;
@@ -464,7 +458,7 @@ namespace MatsueNet.Modules
         [Command("queue", RunMode = RunMode.Async), Summary("View the current list of songs in the queue"), Alias("q")]
         public async Task Queue()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendWarningAsync("I'm not connected to a voice channel. So I don't have a queue right now");
                 return;
@@ -500,7 +494,7 @@ namespace MatsueNet.Modules
          Alias("rm")]
         public async Task RemoveFromQueue(int index)
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendWarningAsync("I'm not connected to a voice channel. So I don't have a queue right now");
                 return;
@@ -543,7 +537,7 @@ namespace MatsueNet.Modules
 
         private async Task<LavaPlayer> IsPlayingConnected()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!LavaNode.TryGetPlayer(Context.Guild, out var player))
             {
                 await SendWarningAsync("I'm not connected to a voice channel.");
                 return null;

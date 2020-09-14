@@ -10,12 +10,7 @@ namespace MatsueNet.Modules
     [Summary("Personal commands")]
     public class Personal : MatsueModule
     {
-        private readonly BalanceService _balanceService;
-
-        public Personal(BalanceService balanceService)
-        {
-            _balanceService = balanceService;
-        }
+        public BalanceService BalanceService { get; set; }
 
         [Command("Balance"), Summary("Get your total balance")]
         public async Task Balance()
@@ -30,7 +25,7 @@ namespace MatsueNet.Modules
                 Color = Color.Teal,
                 Author = new EmbedAuthorBuilder
                     {Name = $"{user.Username}'s Balance", IconUrl = $"{user.GetAvatarUrl()}"},
-                Title = $"${await _balanceService.GetBalance(user.Id)}"
+                Title = $"${await BalanceService.GetBalance(user.Id)}"
             };
 
             await SendEmbedAsync(embed.Build());
@@ -44,7 +39,7 @@ namespace MatsueNet.Modules
                 Color = Color.Teal,
                 Author = new EmbedAuthorBuilder
                     {Name = $"{user.Username}'s Balance", IconUrl = $"{user.GetAvatarUrl()}"},
-                Title = $"${await _balanceService.GetBalance(user.Id)}"
+                Title = $"${await BalanceService.GetBalance(user.Id)}"
             };
 
             await SendEmbedAsync(embed.Build());
@@ -58,7 +53,7 @@ namespace MatsueNet.Modules
                 return;
             }
 
-            var result = await _balanceService.Pay(payTo.Id, user.Id, amount);
+            var result = await BalanceService.Pay(payTo.Id, user.Id, amount);
 
             var embed = new EmbedBuilder
             {

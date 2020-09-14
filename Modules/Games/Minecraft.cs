@@ -11,12 +11,7 @@ namespace MatsueNet.Modules.Games
     [Summary("Minecraft related commands")]
     public class Minecraft : MatsueModule
     {
-        private readonly MinecraftService _minecraftService;
-
-        public Minecraft(MinecraftService minecraftService)
-        {
-            _minecraftService = minecraftService;
-        }
+        public MinecraftService MinecraftService { get; set; }
 
         [Command("minecraftskin"), Summary("Get the skin of the provided username"), Alias("mcskin")]
         public async Task GetSkin(string username)
@@ -33,7 +28,7 @@ namespace MatsueNet.Modules.Games
         [Command("minecraftuuid"), Summary("Get the UUID of the provided username"), Alias("mcuuid")]
         public async Task Uuid(string username)
         {
-            var result = await _minecraftService.GetUuid(username);
+            var result = await MinecraftService.GetUuid(username);
             var embed = new EmbedBuilder();
             embed.WithAuthor("Minecraft", "https://pbs.twimg.com/profile_images/454943636590186497/K4op_GD2.jpeg");
             embed.WithColor(Color.Red);
@@ -47,7 +42,7 @@ namespace MatsueNet.Modules.Games
         [Command("minecraftnames"), Summary("Get previous usernames from current username"), Alias("mcnames")]
         public async Task PreviousNames(string username)
         {
-            var result = await _minecraftService.GetNames(username);
+            var result = await MinecraftService.GetNames(username);
             if (result.Count < 2)
             {
                 await SendWarningAsync($"No previous names found for {username}");
@@ -61,7 +56,8 @@ namespace MatsueNet.Modules.Games
             foreach (var name in result)
             {
                 var date = (new DateTime(1970, 1, 1)).AddMilliseconds(name.ChangedToInMs);
-                embed.AddField(name.Name, Math.Abs(name.ChangedToInMs) > 0 ? $"Changed on {date.ToString("D")}" : "First username");
+                embed.AddField(name.Name,
+                    Math.Abs(name.ChangedToInMs) > 0 ? $"Changed on {date.ToString("D")}" : "First username");
             }
 
             embed.WithColor(Color.Red);

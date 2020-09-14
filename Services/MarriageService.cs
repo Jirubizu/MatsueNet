@@ -7,14 +7,7 @@ namespace MatsueNet.Services
 {
     public class MarriageService
     {
-        private readonly DatabaseService _databaseService;
-        private readonly DiscordShardedClient _client;
-
-        public MarriageService(DatabaseService databaseService, DiscordShardedClient client)
-        {
-            _databaseService = databaseService;
-            _client = client;
-        }
+        public DatabaseService Database { get; set; }
 
         public async Task<ulong?> Marry(ulong user, ulong toMarry)
         {
@@ -23,14 +16,14 @@ namespace MatsueNet.Services
             {
                 return marriedTo;
             }
-            // _databaseService.UpdateUser()
+            // Database.UpdateUser()
 
             return null;
         }
 
         public async Task<ulong?> MarriedTo(ulong user)
         {
-            var result = await _databaseService.LoadRecordsByUserId(user);
+            var result = await Database.LoadRecordsByUserId(user);
             return result.MarriedTo;
         }
 

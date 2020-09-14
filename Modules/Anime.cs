@@ -13,20 +13,14 @@ namespace MatsueNet.Modules
     [Summary("Ultimate weeb commands")]
     public class Anime : MatsueModule
     {
-        private readonly AnilistClient _aniClient;
-
-        public Anime(AnilistClient ac)
-        {
-            _aniClient = ac;
-        }
-
+        public AnilistClient AniClient { get; set; }
 
         //Anime
         
         [Command("anisearch")]
         public async Task AniSearch(string anime, int page = 0)
         {
-            var foundAnime = await _aniClient.SearchMediaAsync(anime, page, true, MediaType.ANIME);
+            var foundAnime = await AniClient.SearchMediaAsync(anime, page, true, MediaType.ANIME);
 
             if (!foundAnime.Items.Any())
             {
@@ -61,7 +55,7 @@ namespace MatsueNet.Modules
         [Command("aniget")]
         public async Task AniGet(string anime)
         {
-            var foundAnime = await _aniClient.GetMediaAsync(anime, MediaFormat.MANGA, MediaFormat.NOVEL);
+            var foundAnime = await AniClient.GetMediaAsync(anime, MediaFormat.MANGA, MediaFormat.NOVEL);
             if (foundAnime == null)
             {
                 await SendErrorAsync("No anime found with the given search term");
@@ -86,7 +80,7 @@ namespace MatsueNet.Modules
         [Command("mansearch")]
         public async Task ManSearch(string manga, int page = 0)
         {
-            var foundManga = await _aniClient.SearchMediaAsync(manga, page, true, MediaType.MANGA);
+            var foundManga = await AniClient.SearchMediaAsync(manga, page, true, MediaType.MANGA);
 
             if (!foundManga.Items.Any())
             {
@@ -125,7 +119,7 @@ namespace MatsueNet.Modules
         [Command("manget")]
         public async Task ManGet(string manga)
         {
-            var foundManga = await _aniClient.GetMediaAsync(manga, MediaFormat.MUSIC, MediaFormat.ONA, MediaFormat.ONE_SHOT, MediaFormat.OVA, MediaFormat.SPECIAL, MediaFormat.TV, MediaFormat.TV_SHORT);
+            var foundManga = await AniClient.GetMediaAsync(manga, MediaFormat.MUSIC, MediaFormat.ONA, MediaFormat.ONE_SHOT, MediaFormat.OVA, MediaFormat.SPECIAL, MediaFormat.TV, MediaFormat.TV_SHORT);
             if (foundManga == null)
             {
                 await SendErrorAsync("No manga found with the given search term");
@@ -153,7 +147,7 @@ namespace MatsueNet.Modules
         [Command("chasearch")]
         public async Task ChaSearch(string character, int page = 0)
         {
-            var foundCharacter = await _aniClient.SearchCharactersAsync(character, page);
+            var foundCharacter = await AniClient.SearchCharactersAsync(character, page);
 
             if (!foundCharacter.Items.Any())
             {
@@ -190,7 +184,7 @@ namespace MatsueNet.Modules
         [Command("chaget")]
         public async Task ChaGet(string character)
         {
-            var foundCharacter = await _aniClient.GetCharacterAsync(character);
+            var foundCharacter = await AniClient.GetCharacterAsync(character);
             if (foundCharacter == null)
             {
                 await SendErrorAsync("No character found with the given search term");

@@ -7,22 +7,17 @@ namespace MatsueNet.Services
 {
     public class MinecraftService
     {
-        private readonly HttpService _httpService;
-        
-        public MinecraftService(HttpService httpService)
-        {
-            _httpService = httpService;
-        }
+        public HttpService Http { get; set; }
 
         public async Task<MinecraftUserJson> GetUuid(string username)
         {
-            return await _httpService.GetJsonAsync<MinecraftUserJson>("https://api.mojang.com/users/profiles/minecraft/" + username);
+            return await Http.GetJsonAsync<MinecraftUserJson>("https://api.mojang.com/users/profiles/minecraft/" + username);
         }
 
         public async Task<List<MinecraftNamesJson>> GetNames(string username)
         {
             var result = await GetUuid(username);
-            return await _httpService.GetJsonAsync<List<MinecraftNamesJson>>($"https://api.mojang.com/user/profiles/{result.Uuid}/names");
+            return await Http.GetJsonAsync<List<MinecraftNamesJson>>($"https://api.mojang.com/user/profiles/{result.Uuid}/names");
         }
     }
 }

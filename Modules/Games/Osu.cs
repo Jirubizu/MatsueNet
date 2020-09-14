@@ -11,17 +11,12 @@ namespace MatsueNet.Modules.Games
     [Summary("Osu stats commands")]
     public class Osu : MatsueModule
     {
-        private readonly OsuService _osuService;
-
-        public Osu(OsuService osuService)
-        {
-            _osuService = osuService;
-        }
+        public OsuService OsuService { get; set; }
 
         [Command("osustats"), Summary("Get osu stats from a username"), Alias("ostats")]
         public async Task OsuStats(string username, GameMode gamemode = GameMode.Standard)
         {
-            var user = await _osuService.GetUser(username, gamemode);
+            var user = await OsuService.GetUser(username, gamemode);
             var embed = new EmbedBuilder();
             embed.WithAuthor("Osu",
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Osu%21Logo_%282015%29.png/800px-Osu%21Logo_%282015%29.png");

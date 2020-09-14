@@ -7,28 +7,19 @@ using MatsueNet.Services;
 using Discord.Commands;
 using System.Threading.Tasks;
 using Interactivity;
-using Interactivity.Pagination;
 using MatsueNet.Attributes.Parameter;
 using MatsueNet.Attributes.Preconditions;
 using MatsueNet.Extentions;
 
 namespace MatsueNet.Modules
 {
-    [ChannelCheck(Channels.Admin,Channels.Bot)]
+    [ChannelCheck(Channels.Admin, Channels.Bot)]
     [Summary("Admin management commands")]
     public class Admin : MatsueModule
     {
-        private readonly DiscordShardedClient _client;
-        private readonly DatabaseService _database;
-        private readonly InteractivityService _interactivity;
-
-        public Admin(DiscordShardedClient client, DatabaseService db, InteractivityService iss)
-        {
-            _client = client;
-            _database = db;
-            _interactivity = iss;
-        }
-        
+        public DiscordShardedClient Client { get; set; }
+        public DatabaseService Database { get; set; }
+        public PaginationService Interactivity { get; set; }
 
         [RequireUserPermission(GuildPermission.BanMembers), RequireBotPermission(GuildPermission.BanMembers)]
         [Command("Ban"), Summary("Ban a selected user given their mention")]
@@ -44,7 +35,7 @@ namespace MatsueNet.Modules
             try
             {
                 await Context.Guild.AddBanAsync(id, 0, reason);
-                var user = _client.GetUser(id);
+                var user = Client.GetUser(id);
                 await SendSuccessAsync($"Banned {user.Id} for {reason}");
             }
             catch (Exception)
@@ -60,7 +51,7 @@ namespace MatsueNet.Modules
             try
             {
                 await Context.Guild.RemoveBanAsync(userid);
-                var user = _client.GetUser(userid);
+                var user = Client.GetUser(userid);
                 await SendSuccessAsync($"Unbanned {user.Username}");
             }
             catch (Exception)
@@ -96,7 +87,7 @@ namespace MatsueNet.Modules
                     return;
                 }
 
-                var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
+                var current = await Database.LoadRecordsByGuildId(guildChannel.Guild.Id);
 
                 var messages = await channel.GetMessagesAsync(amount).FlattenAsync();
                 messages = messages.Where(m =>
@@ -114,9 +105,9 @@ namespace MatsueNet.Modules
                 return;
             }
 
-            var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
+            var current = await Database.LoadRecordsByGuildId(guildChannel.Guild.Id);
             current.Prefix = prefix;
-            await _database.UpdateGuild(current);
+            await Database.UpdateGuild(current);
 
             await SendSuccessAsync($"Successfully set the prefix to {prefix}");
         }
@@ -130,12 +121,14 @@ namespace MatsueNet.Modules
                 return;
             }
 
-            var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
+            var current = await Database.LoadRecordsByGuildId(guildChannel.Guild.Id);
 
             current.MusicChannelId = channel?.Id;
-            await _database.UpdateGuild(current);
+            await Database.UpdateGuild(current);
 
-            await SendSuccessAsync(channel != null ? $"Successfully set the music channel to {channel.Name}" : "Successfully un linked the bot from previous channel");
+            await SendSuccessAsync(channel != null
+                ? $"Successfully set the music channel to {channel.Name}"
+                : "Successfully un linked the bot from previous channel");
         }
 
         [RequireUserPermission(GuildPermission.ManageChannels), RequireBotPermission(ChannelPermission.ManageChannels)]
@@ -147,11 +140,13 @@ namespace MatsueNet.Modules
                 return;
             }
 
-            var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
+            var current = await Database.LoadRecordsByGuildId(guildChannel.Guild.Id);
             current.AdminChannelId = channel?.Id;
-            await _database.UpdateGuild(current);
+            await Database.UpdateGuild(current);
 
-            await SendSuccessAsync(channel != null ? $"Successfully set the admin channel to {channel.Name}" : "Successfully un linked the bot from previous channel");
+            await SendSuccessAsync(channel != null
+                ? $"Successfully set the admin channel to {channel.Name}"
+                : "Successfully un linked the bot from previous channel");
         }
 
         [RequireUserPermission(GuildPermission.ManageChannels), RequireBotPermission(ChannelPermission.ManageChannels)]
@@ -163,11 +158,13 @@ namespace MatsueNet.Modules
                 return;
             }
 
-            var current = await _database.LoadRecordsByGuildId(guildChannel.Guild.Id);
+            var current = await Database.LoadRecordsByGuildId(guildChannel.Guild.Id);
             current.BotChannelId = channel?.Id;
-            await _database.UpdateGuild(current);
+            await Database.UpdateGuild(current);
 
-            await SendSuccessAsync(channel != null ? $"Successfully set the bot channel to {channel.Name}" : "Successfully un linked the bot from previous channel");
+            await SendSuccessAsync(channel != null
+                ? $"Successfully set the bot channel to {channel.Name}"
+                : "Successfully un linked the bot from previous channel");
         }
 
         [Command("whois"), Summary("Find out who has certain roles [use a ', ' as a separator]"), Alias("whoi")]
@@ -190,22 +187,18 @@ namespace MatsueNet.Modules
                 dict.Add(i, new List<SocketGuildUser>(users.Skip(i * 25).Take(25)));
             }
 
-            var pages = new List<PageBuilder>();
+            var pages = new List<EmbedBuilder>();
             for (var i = 0; i < dict.Count; i++)
             {
                 var desc = (dict.GetValueOrDefault(i) ?? new List<SocketGuildUser>()).Aggregate("",
                     (current, user) => current + $"{user.Mention}\n");
-                pages.Add(new PageBuilder().WithTitle($"Users who have the following roles {roles}")
-                    .WithDescription(desc).WithColor(Color.Teal));
+                pages.Add(new EmbedBuilder().WithDescription(desc).WithColor(Color.Teal));
             }
 
-            var paginator = new StaticPaginatorBuilder();
-            paginator.WithUsers(Context.User);
-            paginator.WithPages(pages);
-            paginator.WithFooter(PaginatorFooter.PageNumber);
-            paginator.WithForBackEmojis();
+            var paginator = new PaginatedMessage(pages, $"Users who have the following roles {roles}", Color.Teal,
+                Context.User);
 
-            await _interactivity.SendPaginatorAsync(paginator.Build(), Context.Channel, TimeSpan.FromMinutes(2));
+            await Interactivity.SendPaginatedMessageAsync(Context.Channel, paginator);
         }
 
         [Command("whoisnot"), Summary("Find out who does not have certain roles [use a ', ' as a separator]"),
@@ -228,22 +221,19 @@ namespace MatsueNet.Modules
                 dict.Add(i, new List<SocketGuildUser>(users.Skip(i * 25).Take(25)));
             }
 
-            var pages = new List<PageBuilder>();
+            var pages = new List<EmbedBuilder>();
             for (var i = 0; i < dict.Count; i++)
             {
                 var desc = (dict.GetValueOrDefault(i) ?? new List<SocketGuildUser>()).Aggregate("",
                     (current, user) => current + $"{user.Mention}\n");
-                pages.Add(new PageBuilder().WithTitle($"Users who do not have the following roles {roles}")
+                pages.Add(new EmbedBuilder().WithTitle($"Users who do not have the following roles {roles}")
                     .WithDescription(desc).WithColor(Color.Teal));
             }
 
-            var paginator = new StaticPaginatorBuilder();
-            paginator.WithUsers(Context.User);
-            paginator.WithPages(pages);
-            paginator.WithFooter(PaginatorFooter.PageNumber);
-            paginator.WithForBackEmojis();
+            var paginator = new PaginatedMessage(pages, "", Color.Teal, Context.User,
+                new AppearanceOptions{Timeout = TimeSpan.FromSeconds(2)});
 
-            await _interactivity.SendPaginatorAsync(paginator.Build(), Context.Channel, TimeSpan.FromMinutes(2));
+            await Interactivity.SendPaginatedMessageAsync(Context.Channel, paginator);
         }
     }
 }
