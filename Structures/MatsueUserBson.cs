@@ -15,11 +15,5 @@ namespace MatsueNet.Structures
 
         [BsonElement("balance")]
         public double Balance { get; set; }
-
-        [BsonElement("married")]
-        public bool Married { get; set; }
-
-        [BsonElement("married_to")]
-        public ulong? MarriedTo { get; set; }
     }
 }

@@ -12,7 +12,9 @@ namespace MatsueNet.Services
     {
         private readonly IMongoDatabase _mongoDatabase;
         private readonly Dictionary<ulong, MatsueUserBson> _matsueUserCache = new Dictionary<ulong, MatsueUserBson>();
-        private readonly Dictionary<ulong, MatsueGuildBson> _matsueGuildCache = new Dictionary<ulong, MatsueGuildBson>();
+
+        private readonly Dictionary<ulong, MatsueGuildBson>
+            _matsueGuildCache = new Dictionary<ulong, MatsueGuildBson>();
 
         public DatabaseService(DiscordShardedClient shardedClient, ConfigService configService)
         {
@@ -118,8 +120,7 @@ namespace MatsueNet.Services
             var result = await LoadRecordsByUserId(message.Author.Id);
             if (result == null)
             {
-                await InsertRecord("users",
-                    new MatsueUserBson {UserId = message.Author.Id, Balance = 0, Married = false, MarriedTo = null});
+                await InsertRecord("users", new MatsueUserBson {UserId = message.Author.Id, Balance = 0});
             }
         }
 

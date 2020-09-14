@@ -17,10 +17,6 @@ The database is based on MongoDB. There are currently two documents (tables) one
     "user_id": {
         "$numberLong": "01010101010101010"
     },
-    "married": false,
-    "married_to": {
-        "$numberLong": "01010101010101010"
-    },
     "balance": 1.04
 }
 ```
@@ -45,20 +41,17 @@ The database is based on MongoDB. There are currently two documents (tables) one
 ```
 
 ## Todo List
-- [x] Implement checks to make sure commands are only executed in specefic channels if the bot it setup that way
-- [ ] Implement marriage system
-  - [ ] Allow people to see who someone is married
-  - [ ] Only allow 1 across all of discord (global marraige)
+- [x] Implement checks to make sure commands are only executed in specific channels if the bot it setup that way
 - [x] Implement balances
   - [x] View balance
-  - [x] Get money (dailys or something like that)
+  - [x] Obtain money daily through messaging
   - [x] Send money
-  - [x] Recieve money
+  - [x] Receive money
 - [ ] More features to think of... 
 
 ## Prerequisites
  - Discord.Net
  - [Lavalink](https://github.com/Frederikam/Lavalink)
- - Victoria (Provided)
+ - Victoria (Provided as its slightly customised)
 
 
