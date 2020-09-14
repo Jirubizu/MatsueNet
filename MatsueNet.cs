@@ -71,7 +71,7 @@ namespace MatsueNet
             .AddSingleton<OsuService>()
             .AddSingleton<TronaldDumpService>()
             .AddSingleton<BalanceService>()
-            .AddSingleton(new InteractivityService(_client, TimeSpan.FromMinutes(3)))
+            .AddSingleton<PaginationService>()
             .BuildServiceProvider();
 
         private Task LogAsync(LogMessage message)

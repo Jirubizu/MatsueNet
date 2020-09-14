@@ -27,7 +27,10 @@ namespace MatsueNet.Structures
         
         [JsonProperty("lavalink_password")]
         public string LavaLinkPassword { get; set; }
-
+        
+        [JsonProperty("ocrspace_key")]
+        public string OCR { get; set; }
+        
         public bool Equals(ConfigStruct other)
         {
             throw new NotImplementedException();
