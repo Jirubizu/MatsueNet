@@ -477,24 +477,27 @@ namespace MatsueNet.Modules
                 return;
             }
 
-            var embed = new EmbedBuilder
-            {
-                Title = "Music Queue",
-                Color = Color.Teal,
-                ThumbnailUrl = await player.Track.FetchArtworkAsync()
-            };
-            embed.AddField("Now Playing", $"{player.Track.Title} || {player.Track.Queued.Mention}");
-
             var queue = new StringBuilder();
+            var pages = new List<EmbedBuilder>();
             for (var index = 0; index < player.Queue.Count; index++)
             {
+                if (index != 0 && index % 6 == 0)
+                {
+                    pages.Add(new EmbedBuilder().AddField("Now Playing", $"{player.Track.Title} 〚{player.Track.Queued.Username}〛").AddField("Up next", queue));
+                    queue.Clear();
+                }
                 queue.Append(
-                    $"{index + 1}: {((LavaTrack) player.Queue.ElementAt(index)).Title} || {((LavaTrack) player.Queue.ElementAt(index)).Queued.Username}\n");
+                    $"{index + 1}: {((LavaTrack) player.Queue.ElementAt(index)).Title} 〚{((LavaTrack) player.Queue.ElementAt(index)).Queued.Username}〛\n");
             }
 
-            embed.AddField("Up Next", queue);
-
-            await SendEmbedAsync(embed.Build());
+            if (pages.Count == 0 || queue.Length != 0)
+            {
+                pages.Add(new EmbedBuilder().AddField("Now Playing", $"{player.Track.Title} 〚{player.Track.Queued.Username}〛").AddField("Up next", queue));
+            }
+            
+            var paginator = new PaginatedMessage(pages, "Music Queue",Color.Teal,Context.User, new AppearanceOptions{Timeout = TimeSpan.FromSeconds(15)});
+            
+            await Paging.SendPaginatedMessageAsync(Context.Channel, paginator);
         }
 
         [Command("removequeue", RunMode = RunMode.Async), Summary("Remove a given track from the list using the index"),
