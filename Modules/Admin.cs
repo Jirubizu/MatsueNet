@@ -198,7 +198,7 @@ namespace MatsueNet.Modules
             var paginator = new PaginatedMessage(pages, $"Users who have the following roles {roles}", Color.Teal,
                 Context.User);
 
-            await Interactivity.SendPaginatedMessageAsync(Context.Channel, paginator);
+            await Interactivity.SendMessageAsync(Context.Channel, paginator);
         }
 
         [Command("whoisnot"), Summary("Find out who does not have certain roles [use a ', ' as a separator]"),
@@ -233,7 +233,7 @@ namespace MatsueNet.Modules
             var paginator = new PaginatedMessage(pages, "", Color.Teal, Context.User,
                 new AppearanceOptions{Timeout = TimeSpan.FromSeconds(2)});
 
-            await Interactivity.SendPaginatedMessageAsync(Context.Channel, paginator);
+            await Interactivity.SendMessageAsync(Context.Channel, paginator);
         }
     }
 }

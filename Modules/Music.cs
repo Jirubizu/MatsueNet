@@ -421,8 +421,8 @@ namespace MatsueNet.Modules
             }
 
             pages.Add(new EmbedBuilder().WithDescription(stringBuilder.ToString()));
-            var paginator = new PaginatedMessage(pages, $"Lyrics for {player.Track.Title}", Color.Teal, Context.User, new AppearanceOptions{Timeout = TimeSpan.FromMinutes(4)});
-            await Paging.SendPaginatedMessageAsync(Context.Channel, paginator);
+            var paginator = new PaginatedMessage(pages, $"Lyrics for {player.Track.Title}", Color.Teal, Context.User, new AppearanceOptions{Timeout = TimeSpan.FromMinutes(4), Style = DisplayStyle.Minimal});
+            await Paging.SendMessageAsync(Context.Channel, paginator);
         }
 
         [Command("OVH", RunMode = RunMode.Async), Summary("Display the lyrics from ovh site")]
@@ -458,8 +458,8 @@ namespace MatsueNet.Modules
             }
 
             pages.Add(new EmbedBuilder().WithDescription(stringBuilder.ToString()));
-            var paginator = new PaginatedMessage(pages, $"Lyrics for {player.Track.Title}", Color.Teal, Context.User, new AppearanceOptions{Timeout = TimeSpan.FromMinutes(4)});
-            await Paging.SendPaginatedMessageAsync(Context.Channel, paginator);
+            var paginator = new PaginatedMessage(pages, $"Lyrics for {player.Track.Title}", Color.Teal, Context.User, new AppearanceOptions{Timeout = TimeSpan.FromMinutes(4), Style = DisplayStyle.Minimal});
+            await Paging.SendMessageAsync(Context.Channel, paginator);
         }
 
         [Command("queue", RunMode = RunMode.Async), Summary("View the current list of songs in the queue"), Alias("q")]
@@ -495,9 +495,9 @@ namespace MatsueNet.Modules
                 pages.Add(new EmbedBuilder().AddField("Now Playing", $"{player.Track.Title} 〚{player.Track.Queued.Username}〛").AddField("Up next", queue));
             }
             
-            var paginator = new PaginatedMessage(pages, "Music Queue",Color.Teal,Context.User, new AppearanceOptions{Timeout = TimeSpan.FromSeconds(15)});
+            var paginator = new PaginatedMessage(pages, "Music Queue",Color.Teal,Context.User, new AppearanceOptions{Timeout = TimeSpan.FromSeconds(15), Style = DisplayStyle.Minimal});
             
-            await Paging.SendPaginatedMessageAsync(Context.Channel, paginator);
+            await Paging.SendMessageAsync(Context.Channel, paginator);
         }
 
         [Command("removequeue", RunMode = RunMode.Async), Summary("Remove a given track from the list using the index"),

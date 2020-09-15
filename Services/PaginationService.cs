@@ -1,13 +1,81 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
 namespace MatsueNet.Services
 {
+    public enum StopAction
+    {
+        ClearReactions,
+        DeleteMessage
+    }
+
+    public enum DisplayStyle
+    {
+        Full,
+        Minimal,
+        Selector
+    }
+
+    public class PaginatedMessage
+    {
+        internal string Title { get; }
+        internal Color EmbedColor { get; }
+        internal IReadOnlyCollection<Embed> Pages { get; }
+        internal IUser User { get; }
+        internal AppearanceOptions Options { get; }
+        internal int CurrentPage { get; set; }
+        internal int Count => Pages.Count;
+        
+        public PaginatedMessage(IEnumerable<EmbedBuilder> builders, string title = "", Color? embedColor = null, IUser user = null, AppearanceOptions options = null)
+        {
+            List<Embed> embeds = new List<Embed>();
+            int i = 1;
+
+            foreach (EmbedBuilder builder in builders)
+            {
+                builder.Title ??= title;
+                builder.Color ??= embedColor ?? Color.Default;
+                builder.Footer ??= new EmbedFooterBuilder().WithText($"Page {i++}/{builders.Count()}");
+                embeds.Add(builder.Build());
+            }
+
+            Pages = embeds;
+            Title = title;
+            EmbedColor = embedColor ?? Color.Default;
+            User = user;
+            Options = options ?? new AppearanceOptions();
+            CurrentPage = 1;
+        }
+
+        internal Embed GetEmbed()
+        {
+            return Pages.ElementAtOrDefault(CurrentPage - 1);
+        }
+    }
+
+    public class AppearanceOptions
+    {
+        public const string FIRST = "⏮";
+        public const string BACK = "◀";
+        public const string NEXT = "▶";
+        public const string LAST = "⏭";
+        public const string STOP = "⏹";
+
+        public IEmote EmoteFirst { get; set; } = new Emoji(FIRST);
+        public IEmote EmoteBack { get; set; } = new Emoji(BACK);
+        public IEmote EmoteNext { get; set; } = new Emoji(NEXT);
+        public IEmote EmoteLast { get; set; } = new Emoji(LAST);
+        public IEmote EmoteStop { get; set; } = new Emoji(STOP);
+        public TimeSpan Timeout { get; set; } = TimeSpan.Zero;
+        public DisplayStyle Style { get; set; } = DisplayStyle.Full;
+        public StopAction EmoteStopAction { get; set; } = StopAction.ClearReactions;
+        public StopAction TimeoutAction { get; set; } = StopAction.ClearReactions;
+    }
+
     public class PaginationService
     {
         private readonly Dictionary<ulong, PaginatedMessage> Messages;
@@ -20,15 +88,32 @@ namespace MatsueNet.Services
             this.client.ReactionAdded += OnReactionAdded;
         }
 
-        public async Task<IUserMessage> SendPaginatedMessageAsync(IMessageChannel channel, PaginatedMessage paginated)
+        public async Task<IUserMessage> SendMessageAsync(IMessageChannel channel, PaginatedMessage paginated)
         {
             IUserMessage message = await channel.SendMessageAsync("", embed: paginated.GetEmbed());
 
-            await message.AddReactionAsync(paginated.Options.EmoteFirst);
-            await message.AddReactionAsync(paginated.Options.EmoteBack);
-            await message.AddReactionAsync(paginated.Options.EmoteNext);
-            await message.AddReactionAsync(paginated.Options.EmoteLast);
-            await message.AddReactionAsync(paginated.Options.EmoteStop);
+            switch (paginated.Options.Style)
+            {
+                case DisplayStyle.Full:
+                    await message.AddReactionAsync(paginated.Options.EmoteFirst);
+                    await message.AddReactionAsync(paginated.Options.EmoteBack);
+                    await message.AddReactionAsync(paginated.Options.EmoteNext);
+                    await message.AddReactionAsync(paginated.Options.EmoteLast);
+                    await message.AddReactionAsync(paginated.Options.EmoteStop);
+                    break;
+
+                case DisplayStyle.Minimal:
+                    await message.AddReactionAsync(paginated.Options.EmoteBack);
+                    await message.AddReactionAsync(paginated.Options.EmoteNext);
+                    await message.AddReactionAsync(paginated.Options.EmoteStop);
+                    break;
+
+                case DisplayStyle.Selector:
+                    await message.AddReactionAsync(paginated.Options.EmoteBack);
+                    await message.AddReactionAsync(paginated.Options.EmoteStop);
+                    await message.AddReactionAsync(paginated.Options.EmoteNext);
+                    break;
+            }
 
             Messages.Add(message.Id, paginated);
 
@@ -131,71 +216,5 @@ namespace MatsueNet.Services
                 }
             }
         }
-    }
-
-    public class PaginatedMessage
-    {
-        internal string Title { get; }
-        internal Color EmbedColor { get; }
-        internal IReadOnlyCollection<Embed> Pages { get; }
-        internal IUser User { get; }
-        internal AppearanceOptions Options { get; }
-        internal int CurrentPage { get; set; }
-        internal int Count => Pages.Count;
-
-        public PaginatedMessage(IEnumerable<string> pages, string title = "", Color? embedColor = null, IUser user = null, AppearanceOptions options = null)
-        {
-            new PaginatedMessage(pages.Select(x => new EmbedBuilder().WithDescription(x)), title, embedColor, user, options);
-        }
-        
-        public PaginatedMessage(IEnumerable<EmbedBuilder> builders, string title = "", Color? embedColor = null, IUser user = null, AppearanceOptions options = null)
-        {
-            List<Embed> embeds = new List<Embed>();
-            int i = 1;
-
-            foreach (var builder in builders)
-            {
-                builder.Title ??= title;
-                builder.Color ??= embedColor ?? Color.Default;
-                builder.Footer ??= new EmbedFooterBuilder().WithText($"Page {i++}/{builders.Count()}");
-                embeds.Add(builder.Build());
-            }
-
-            Pages = embeds;
-            Title = title;
-            EmbedColor = embedColor ?? Color.Default;
-            User = user;
-            Options = options ?? new AppearanceOptions();
-            CurrentPage = 1;
-        }
-
-        internal Embed GetEmbed()
-        {
-            return Pages.ElementAtOrDefault(CurrentPage - 1);
-        }
-    }
-
-    public class AppearanceOptions
-    {
-        public const string FIRST = "⏮";
-        public const string BACK = "◀";
-        public const string NEXT = "▶";
-        public const string LAST = "⏭";
-        public const string STOP = "🛑";
-
-        public IEmote EmoteFirst { get; set; } = new Emoji(FIRST);
-        public IEmote EmoteBack { get; set; } = new Emoji(BACK);
-        public IEmote EmoteNext { get; set; } = new Emoji(NEXT);
-        public IEmote EmoteLast { get; set; } = new Emoji(LAST);
-        public IEmote EmoteStop { get; set; } = new Emoji(STOP);
-        public TimeSpan Timeout { get; set; } = TimeSpan.Zero;
-        public StopAction EmoteStopAction { get; set; } = StopAction.DeleteMessage;
-        public StopAction TimeoutAction { get; set; } = StopAction.DeleteMessage;
-    }
-
-    public enum StopAction
-    {
-        ClearReactions,
-        DeleteMessage
     }
 }
