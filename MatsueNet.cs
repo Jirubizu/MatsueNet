@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Interactivity;
 using MatsueNet.Handlers;
 using MatsueNet.Services;
 using Microsoft.Extensions.DependencyInjection;
