@@ -1,4 +1,4 @@
-﻿# MatsueNet C# Discord Bot
+﻿# MatsueNet C# Discord Bots
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b7cd4ea417c4db2ba8106775845171c)](https://app.codacy.com/manual/Jirubizu/MatsueNet?utm_source=github.com&utm_medium=referral&utm_content=Jirubizu/MatsueNet&utm_campaign=Badge_Grade_Dashboard)
 
