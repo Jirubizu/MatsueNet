@@ -30,6 +30,9 @@ namespace MatsueNet.Structures
         
         [JsonProperty("ocrspace_key")]
         public string OCR { get; set; }
+
+        [JsonProperty("translate_base_url")]
+        public string TranslateBaseUrl { get; set; }
         
         public bool Equals(ConfigStruct other)
         {

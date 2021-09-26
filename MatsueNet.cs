@@ -71,6 +71,8 @@ namespace MatsueNet
             .AddSingleton<TronaldDumpService>()
             .AddSingleton<BalanceService>()
             .AddSingleton<PaginationService>()
+            .AddSingleton<OCRService>()
+            .AddSingleton<TranslateService>()
             .BuildServiceProvider();
 
         private Task LogAsync(LogMessage message)
