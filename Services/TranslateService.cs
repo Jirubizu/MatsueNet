@@ -23,7 +23,7 @@ namespace MatsueNet.Services
             to = Uri.EscapeDataString(to);
             text = Uri.EscapeDataString(text);
             
-            var res = await http.GetJArrayAsync(
+            JArray res = await http.GetJArrayAsync(
                 $"{config.Config.TranslateBaseUrl}sl={from}&tl={to}&dt=t&q={text}");
             Console.WriteLine($"{config.Config.TranslateBaseUrl}sl={from}&tl={to}&dt=t&q={text}");
             return res;
@@ -32,7 +32,6 @@ namespace MatsueNet.Services
         public async Task<EmbedBuilder> GetTranslatedEmbed(string from, string to, string text)
         {
             JArray json = await GetJArray(from, to, text);
-
             // ReSharper disable once PossibleNullReferenceException
             if (json.HasValues && json[0].HasValues && json[0][0].HasValues)
             {
